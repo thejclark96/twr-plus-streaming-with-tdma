@@ -8,7 +8,11 @@ The example also illustrates the WCS (Wireless Clock Synchronization) capability
 ### Building target for (up to) 8 nodes
 
 Master node (only one allowed per network):
+<<<<<<< HEAD
 - This is the default fom Decawave
+=======
+- This is the default fom Decawave, the ones below this are experimental
+>>>>>>> 1fd1585e (Successfully built and flashed twr_nranges_tdma (Joel's code from the risk demos))
 ```no-highlight
 newt target create nrng_master_node
 newt target set nrng_master_node app=apps/twr_nranges_tdma
