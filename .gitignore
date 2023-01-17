@@ -30,4 +30,9 @@ tags
 *.swp
 *.swo
 # Added by Joel
+<<<<<<< HEAD
 bin/
+=======
+bin/
+/bin/
+>>>>>>> 23d51527 (Edited gitignore to ignore all changes in /bin/ folder.)
