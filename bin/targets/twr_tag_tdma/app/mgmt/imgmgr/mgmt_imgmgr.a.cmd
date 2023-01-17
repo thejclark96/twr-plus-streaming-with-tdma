@@ -1,0 +1,9 @@
+arm-none-eabi-ar
+rcs
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/mgmt_imgmgr.a
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr.o
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_cli.o
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_coredump.o
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_log.o
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_state.o
+/home/joel/Capstone/uwb-apps/bin/targets/twr_tag_tdma/app/mgmt/imgmgr/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_util.o
