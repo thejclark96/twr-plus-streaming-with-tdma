@@ -29,3 +29,5 @@ tags
 .DS_Store
 *.swp
 *.swo
+# Added by Joel
+bin/
