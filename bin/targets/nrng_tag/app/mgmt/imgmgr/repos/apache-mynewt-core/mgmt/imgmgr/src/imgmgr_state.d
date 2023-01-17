@@ -69,4 +69,4 @@ imgmgr_state.o: repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_state.c \
  repos/apache-mynewt-core/mgmt/imgmgr/include/imgmgr/imgmgr.h \
  repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_priv.h \
  repos/apache-mynewt-core/sys/log/full/include/log/log_fcb_slot1.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_state.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_state.o: 

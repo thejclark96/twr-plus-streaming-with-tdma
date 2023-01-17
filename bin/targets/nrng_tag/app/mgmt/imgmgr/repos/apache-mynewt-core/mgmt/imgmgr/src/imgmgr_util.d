@@ -7,4 +7,4 @@ imgmgr_util.o: repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_util.c \
  repos/mcuboot/boot/bootutil/include/bootutil/image.h \
  repos/apache-mynewt-core/libc/baselibc/include/inttypes.h \
  repos/apache-mynewt-core/mgmt/imgmgr/include/imgmgr/imgmgr.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_util.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_util.o: 

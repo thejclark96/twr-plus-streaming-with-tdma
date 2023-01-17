@@ -93,4 +93,4 @@ dw1000_cli.o: \
  repos/decawave-uwb-core/lib/uwb_rng/include/uwb_rng/uwb_rng.h \
  repos/decawave-uwb-core/lib/euclid/include/euclid/triad.h \
  repos/decawave-uwb-core/lib/uwb_rng/include/uwb_rng/slots.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-dw1000/hw/drivers/uwb/uwb_dw1000/src/dw1000_cli.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-dw1000/hw/drivers/uwb/uwb_dw1000/src/dw1000_cli.o: 

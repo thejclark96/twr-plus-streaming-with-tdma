@@ -71,4 +71,4 @@ pkcs12.o: repos/apache-mynewt-core/crypto/mbedtls/src/pkcs12.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/asn1.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/cipher.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/pkcs12.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/pkcs12.o: 

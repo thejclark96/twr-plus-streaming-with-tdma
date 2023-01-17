@@ -5,4 +5,4 @@ inline.o: repos/apache-mynewt-core/libc/baselibc/src/inline.c \
  repos/apache-mynewt-core/libc/baselibc/include/stdio.h \
  repos/apache-mynewt-core/libc/baselibc/include/string.h \
  repos/apache-mynewt-core/libc/baselibc/include/ctype.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/libc/baselibc/src/inline.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/libc/baselibc/src/inline.o: 

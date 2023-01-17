@@ -65,4 +65,4 @@ platform.o: repos/apache-mynewt-core/crypto/mbedtls/src/platform.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/config.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/platform.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/platform.o: 

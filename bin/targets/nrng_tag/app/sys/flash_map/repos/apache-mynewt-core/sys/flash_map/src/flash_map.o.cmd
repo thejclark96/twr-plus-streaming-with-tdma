@@ -188,5 +188,5 @@ arm-none-eabi-gcc
 -Itargets/nrng_tag/src/arch/cortex_m4
 -c
 -o
-/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/sys/flash_map/repos/apache-mynewt-core/sys/flash_map/src/flash_map.o
+/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/sys/flash_map/repos/apache-mynewt-core/sys/flash_map/src/flash_map.o
 repos/apache-mynewt-core/sys/flash_map/src/flash_map.c

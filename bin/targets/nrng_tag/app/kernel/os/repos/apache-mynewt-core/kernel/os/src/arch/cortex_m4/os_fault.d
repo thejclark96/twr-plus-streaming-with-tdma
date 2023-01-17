@@ -63,4 +63,4 @@ os_fault.o: \
  repos/apache-mynewt-core/sys/console/full/include/console/console.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_system.h \
  repos/apache-mynewt-core/kernel/os/src/os_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/kernel/os/src/arch/cortex_m4/os_fault.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/kernel/os/src/arch/cortex_m4/os_fault.o: 

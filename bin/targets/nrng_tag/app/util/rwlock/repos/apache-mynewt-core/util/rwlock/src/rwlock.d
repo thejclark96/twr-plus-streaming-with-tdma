@@ -60,4 +60,4 @@ rwlock.o: repos/apache-mynewt-core/util/rwlock/src/rwlock.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/util/rwlock/include/rwlock/rwlock.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/util/rwlock/src/rwlock.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/util/rwlock/src/rwlock.o: 

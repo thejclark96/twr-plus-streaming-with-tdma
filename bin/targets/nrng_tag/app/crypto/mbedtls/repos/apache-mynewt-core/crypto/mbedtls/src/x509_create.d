@@ -75,4 +75,4 @@ x509_create.o: repos/apache-mynewt-core/crypto/mbedtls/src/x509_create.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/oid.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/cipher.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/x509.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/x509_create.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/x509_create.o: 

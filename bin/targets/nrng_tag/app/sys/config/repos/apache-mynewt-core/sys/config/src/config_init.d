@@ -65,4 +65,4 @@ config_init.o: repos/apache-mynewt-core/sys/config/src/config_init.c \
  repos/apache-mynewt-core/sys/config/include/config/config_store.h \
  repos/apache-mynewt-core/fs/fcb/include/fcb/fcb.h \
  repos/apache-mynewt-core/sys/config/include/config/config_fcb.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/config/src/config_init.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/config/src/config_init.o: 

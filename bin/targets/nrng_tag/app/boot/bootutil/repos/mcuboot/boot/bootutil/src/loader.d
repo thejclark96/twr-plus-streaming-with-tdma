@@ -20,4 +20,4 @@ loader.o: repos/mcuboot/boot/bootutil/src/loader.c \
  repos/mcuboot/boot/bootutil/include/bootutil/ignore.h \
  repos/mcuboot/boot/mynewt/mcuboot_config/include/mcuboot_config/mcuboot_logging.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdio.h
-/home/joel/Capstone/uwb-apps/repos/mcuboot/boot/bootutil/src/loader.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/mcuboot/boot/bootutil/src/loader.o: 

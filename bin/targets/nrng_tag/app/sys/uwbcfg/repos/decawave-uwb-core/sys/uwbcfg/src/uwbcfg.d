@@ -74,4 +74,4 @@ uwbcfg.o: repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg.c \
  repos/decawave-uwb-core/hw/drivers/uwb/include/uwb/uwb_mac.h \
  repos/decawave-uwb-core/sys/uwbcfg/include/uwbcfg/uwbcfg.h \
  repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg_priv.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg.o: 

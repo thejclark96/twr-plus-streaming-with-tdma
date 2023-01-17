@@ -188,5 +188,5 @@ arm-none-eabi-gcc
 -Itargets/nrng_tag/src/arch/cortex_m4
 -c
 -o
-/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/util/cbmem/repos/apache-mynewt-core/util/cbmem/src/cbmem.o
+/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/util/cbmem/repos/apache-mynewt-core/util/cbmem/src/cbmem.o
 repos/apache-mynewt-core/util/cbmem/src/cbmem.c

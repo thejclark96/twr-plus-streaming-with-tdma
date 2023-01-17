@@ -69,4 +69,4 @@ nrf_nvmc.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/drivers/nrfx_errors.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_nvmc.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_nvmc.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_nvmc.o: 

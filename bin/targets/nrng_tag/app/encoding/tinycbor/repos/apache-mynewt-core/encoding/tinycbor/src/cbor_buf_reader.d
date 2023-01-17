@@ -14,4 +14,4 @@ cbor_buf_reader.o: \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cborconstants_p.h \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/compilersupport_p.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdlib.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/encoding/tinycbor/src/cbor_buf_reader.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/encoding/tinycbor/src/cbor_buf_reader.o: 

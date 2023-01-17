@@ -66,4 +66,4 @@ newtmgr.o: repos/apache-mynewt-core/mgmt/newtmgr/src/newtmgr.c \
  repos/apache-mynewt-core/mgmt/newtmgr/nmgr_os/include/nmgr_os/nmgr_os.h \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cbor_mbuf_writer.h \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cbor_mbuf_reader.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/mgmt/newtmgr/src/newtmgr.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/mgmt/newtmgr/src/newtmgr.o: 

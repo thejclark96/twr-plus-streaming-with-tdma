@@ -9,4 +9,4 @@ cbor_buf_writer.o: \
  repos/apache-mynewt-core/libc/baselibc/include/stdio.h \
  repos/apache-mynewt-core/libc/baselibc/include/klibc/inline.h \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cbor_buf_writer.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/encoding/tinycbor/src/cbor_buf_writer.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/encoding/tinycbor/src/cbor_buf_writer.o: 

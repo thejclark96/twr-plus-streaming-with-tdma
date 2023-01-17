@@ -69,4 +69,4 @@ nrf_ecb.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/drivers/nrfx_errors.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_ecb.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_ecb.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/hal/nrf_ecb.o: 

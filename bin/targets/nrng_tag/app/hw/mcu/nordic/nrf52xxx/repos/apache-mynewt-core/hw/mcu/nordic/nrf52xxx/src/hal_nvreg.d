@@ -16,4 +16,4 @@ hal_nvreg.o: \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_nvreg.h \
  repos/apache-mynewt-core/libc/baselibc/include/inttypes.h \
  repos/apache-mynewt-core/libc/baselibc/include/klibc/extern.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_nvreg.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_nvreg.o: 

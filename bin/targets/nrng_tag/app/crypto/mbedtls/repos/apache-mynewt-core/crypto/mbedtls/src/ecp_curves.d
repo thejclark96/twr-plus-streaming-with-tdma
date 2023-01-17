@@ -65,4 +65,4 @@ ecp_curves.o: repos/apache-mynewt-core/crypto/mbedtls/src/ecp_curves.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/ecp.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/bignum.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/config.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/ecp_curves.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/ecp_curves.o: 

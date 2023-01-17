@@ -11,4 +11,4 @@ split_config.o: repos/apache-mynewt-core/boot/split/src/split_config.c \
  repos/mcuboot/boot/bootutil/include/bootutil/bootutil.h \
  repos/apache-mynewt-core/libc/baselibc/include/inttypes.h \
  repos/apache-mynewt-core/boot/split/src/split_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/boot/split/src/split_config.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/boot/split/src/split_config.o: 

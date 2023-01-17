@@ -186,5 +186,5 @@ arm-none-eabi-gcc
 -Itargets/nrng_tag/src/arch/cortex_m4
 -c
 -o
-/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/hw/bsp/dwm1001/repos/decawave-uwb-core/hw/bsp/dwm1001/src/hal_bsp.o
+/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/hw/bsp/dwm1001/repos/decawave-uwb-core/hw/bsp/dwm1001/src/hal_bsp.o
 repos/decawave-uwb-core/hw/bsp/dwm1001/src/hal_bsp.c

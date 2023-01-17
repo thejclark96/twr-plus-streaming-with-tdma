@@ -66,4 +66,4 @@ hmac_drbg.o: repos/apache-mynewt-core/crypto/mbedtls/src/hmac_drbg.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/md.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/config.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/hmac_drbg.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/hmac_drbg.o: 

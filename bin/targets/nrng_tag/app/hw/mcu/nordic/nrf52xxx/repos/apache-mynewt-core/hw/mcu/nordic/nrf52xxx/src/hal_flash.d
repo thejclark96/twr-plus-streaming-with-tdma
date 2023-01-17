@@ -20,4 +20,4 @@ hal_flash.o: \
  repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/include/mcu/nrf52_hal.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_flash_int.h \
  repos/apache-mynewt-core/libc/baselibc/include/inttypes.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_flash.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_flash.o: 

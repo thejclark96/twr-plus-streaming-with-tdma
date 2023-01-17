@@ -74,4 +74,4 @@ nrf52_periph.o: \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/drivers/nrfx_errors.h \
  repos/apache-mynewt-core/hw/drivers/uart/include/uart/uart.h \
  repos/apache-mynewt-core/hw/drivers/uart/uart_hal/include/uart_hal/uart_hal.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/nrf52_periph.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/nrf52_periph.o: 

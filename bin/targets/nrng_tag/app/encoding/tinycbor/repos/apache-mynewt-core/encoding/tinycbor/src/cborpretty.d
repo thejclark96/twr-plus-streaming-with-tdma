@@ -12,4 +12,4 @@ cborpretty.o: repos/apache-mynewt-core/encoding/tinycbor/src/cborpretty.c \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/math_support_p.h \
  repos/apache-mynewt-core/libc/baselibc/include/inttypes.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdlib.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/encoding/tinycbor/src/cborpretty.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/encoding/tinycbor/src/cborpretty.o: 

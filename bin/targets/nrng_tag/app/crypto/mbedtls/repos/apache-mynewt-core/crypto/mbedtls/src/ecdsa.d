@@ -72,4 +72,4 @@ ecdsa.o: repos/apache-mynewt-core/crypto/mbedtls/src/ecdsa.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/hmac_drbg.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/md.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/ecdsa.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/ecdsa.o: 

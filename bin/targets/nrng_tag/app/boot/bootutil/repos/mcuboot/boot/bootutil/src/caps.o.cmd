@@ -190,5 +190,5 @@ arm-none-eabi-gcc
 -Itargets/nrng_tag/src/arch/cortex_m4
 -c
 -o
-/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/boot/bootutil/repos/mcuboot/boot/bootutil/src/caps.o
+/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/boot/bootutil/repos/mcuboot/boot/bootutil/src/caps.o
 repos/mcuboot/boot/bootutil/src/caps.c

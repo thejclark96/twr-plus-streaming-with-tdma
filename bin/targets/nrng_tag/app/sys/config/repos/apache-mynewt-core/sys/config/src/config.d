@@ -62,4 +62,4 @@ config.o: repos/apache-mynewt-core/sys/config/src/config.c \
  repos/apache-mynewt-core/encoding/base64/include/base64/base64.h \
  repos/apache-mynewt-core/sys/config/include/config/config.h \
  repos/apache-mynewt-core/sys/config/src/config_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/config/src/config.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/config/src/config.o: 

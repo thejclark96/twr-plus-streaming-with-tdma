@@ -61,4 +61,4 @@ log_fcb_slot1.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/util/cbmem/include/cbmem/cbmem.h \
  repos/apache-mynewt-core/sys/log/full/include/log/log_fcb_slot1.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/log/full/src/log_fcb_slot1.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/log/full/src/log_fcb_slot1.o: 

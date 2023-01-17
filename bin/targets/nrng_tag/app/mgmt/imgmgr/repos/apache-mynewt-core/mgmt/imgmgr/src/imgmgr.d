@@ -68,4 +68,4 @@ imgmgr.o: repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr.c \
  repos/apache-mynewt-core/mgmt/mgmt/include/mgmt/mgmt.h \
  repos/apache-mynewt-core/mgmt/imgmgr/include/imgmgr/imgmgr.h \
  repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/mgmt/imgmgr/src/imgmgr.o: 

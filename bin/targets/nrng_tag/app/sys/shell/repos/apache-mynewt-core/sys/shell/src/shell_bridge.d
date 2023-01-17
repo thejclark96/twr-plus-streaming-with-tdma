@@ -59,4 +59,4 @@ shell_bridge.o: repos/apache-mynewt-core/sys/shell/src/shell_bridge.c \
  repos/apache-mynewt-core/util/cbmem/include/cbmem/cbmem.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/shell/src/shell_bridge.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/shell/src/shell_bridge.o: 

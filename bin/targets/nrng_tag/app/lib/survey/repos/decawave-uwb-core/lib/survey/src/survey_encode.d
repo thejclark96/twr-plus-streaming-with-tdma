@@ -69,4 +69,4 @@ survey_encode.o: repos/decawave-uwb-core/lib/survey/src/survey_encode.c \
  repos/decawave-uwb-core/lib/nrng/include/nrng/nrng.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_spi.h \
  repos/decawave-uwb-core/lib/survey/include/survey/survey.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/lib/survey/src/survey_encode.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/lib/survey/src/survey_encode.o: 

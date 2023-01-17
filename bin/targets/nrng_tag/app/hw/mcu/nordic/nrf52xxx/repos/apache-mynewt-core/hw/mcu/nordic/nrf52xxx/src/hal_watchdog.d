@@ -61,4 +61,4 @@ hal_watchdog.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_watchdog.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_watchdog.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_watchdog.o: 

@@ -80,4 +80,4 @@ x509write_crt.o: \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/sha1.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/pem.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/x509write_crt.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/x509write_crt.o: 

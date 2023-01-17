@@ -61,4 +61,4 @@ ticks.o: repos/apache-mynewt-core/sys/console/full/src/ticks.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/sys/console/full/include/console/console.h \
  repos/apache-mynewt-core/sys/console/full/include/console/prompt.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/console/full/src/ticks.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/console/full/src/ticks.o: 

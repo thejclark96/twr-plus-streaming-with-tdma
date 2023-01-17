@@ -81,4 +81,4 @@ ssl_ticket.o: repos/apache-mynewt-core/crypto/mbedtls/src/ssl_ticket.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/dhm.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/ecdh.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/ssl_ticket.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/ssl_ticket.o: 

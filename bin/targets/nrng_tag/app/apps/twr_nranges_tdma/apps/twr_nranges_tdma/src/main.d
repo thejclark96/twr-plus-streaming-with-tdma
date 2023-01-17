@@ -100,4 +100,4 @@ main.o: apps/twr_nranges_tdma/src/main.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/mcuboot/boot/bootutil/include/bootutil/image.h
-/home/joel/Capstone/uwb-apps/apps/twr_nranges_tdma/src/main.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/apps/twr_nranges_tdma/src/main.o: 

@@ -70,4 +70,4 @@ newtmgr_os.o: \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cbor.h \
  repos/apache-mynewt-core/encoding/cborattr/include/cborattr/cborattr.h \
  repos/apache-mynewt-core/libc/baselibc/include/ctype.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/mgmt/newtmgr/nmgr_os/src/newtmgr_os.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/mgmt/newtmgr/nmgr_os/src/newtmgr_os.o: 

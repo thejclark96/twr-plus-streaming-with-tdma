@@ -69,4 +69,4 @@ wcs_timescale.o: repos/decawave-uwb-core/lib/uwb_wcs/src/wcs_timescale.c \
  repos/mynewt-timescale-lib/lib/timescale/include/timescale/bierman_dbl.h \
  repos/mynewt-timescale-lib/lib/timescale/include/timescale/trisolve_dbl.h \
  repos/mynewt-timescale-lib/lib/timescale/include/timescale/ud_dbl.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/lib/uwb_wcs/src/wcs_timescale.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/lib/uwb_wcs/src/wcs_timescale.o: 

@@ -62,4 +62,4 @@ streamer_console.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/util/streamer/include/streamer/streamer.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/porting/dpl_lib/src/streamer_console.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/porting/dpl_lib/src/streamer_console.o: 

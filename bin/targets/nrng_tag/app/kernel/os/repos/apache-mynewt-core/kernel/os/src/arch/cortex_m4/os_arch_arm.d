@@ -64,4 +64,4 @@ os_arch_arm.o: \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_os_tick.h \
  repos/apache-mynewt-core/kernel/os/src/os_priv.h \
  repos/apache-mynewt-core/sys/console/full/include/console/console.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/kernel/os/src/arch/cortex_m4/os_arch_arm.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/kernel/os/src/arch/cortex_m4/os_arch_arm.o: 

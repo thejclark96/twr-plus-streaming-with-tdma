@@ -8,4 +8,4 @@ slots.o: repos/decawave-uwb-core/lib/uwb_rng/src/slots.c \
  repos/apache-mynewt-core/libc/baselibc/include/klibc/inline.h \
  repos/decawave-uwb-core/lib/uwb_rng/include/uwb_rng/slots.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdlib.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/lib/uwb_rng/src/slots.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/lib/uwb_rng/src/slots.o: 

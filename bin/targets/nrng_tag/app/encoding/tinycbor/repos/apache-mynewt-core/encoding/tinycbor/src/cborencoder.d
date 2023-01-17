@@ -13,4 +13,4 @@ cborencoder.o: \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/cbor.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdlib.h \
  repos/apache-mynewt-core/encoding/tinycbor/include/tinycbor/assert_p.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/encoding/tinycbor/src/cborencoder.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/encoding/tinycbor/src/cborencoder.o: 

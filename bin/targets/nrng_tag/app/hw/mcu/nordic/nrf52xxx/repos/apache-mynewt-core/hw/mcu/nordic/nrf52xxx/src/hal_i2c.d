@@ -71,4 +71,4 @@ hal_i2c.o: repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_i2c.c \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/nrf52832_peripherals.h \
  repos/apache-mynewt-core/hw/mcu/nordic/include/nrfx_glue.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/drivers/nrfx_errors.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_i2c.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_i2c.o: 

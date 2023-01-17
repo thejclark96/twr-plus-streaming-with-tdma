@@ -64,4 +64,4 @@ split.o: repos/apache-mynewt-core/boot/split/src/split.c \
  repos/apache-mynewt-core/sys/config/include/config/config.h \
  repos/apache-mynewt-core/boot/split/include/split/split.h \
  repos/apache-mynewt-core/boot/split/src/split_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/boot/split/src/split.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/boot/split/src/split.o: 

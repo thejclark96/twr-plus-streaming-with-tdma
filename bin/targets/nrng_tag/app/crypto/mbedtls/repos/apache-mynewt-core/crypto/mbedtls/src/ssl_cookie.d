@@ -83,4 +83,4 @@ ssl_cookie.o: repos/apache-mynewt-core/crypto/mbedtls/src/ssl_cookie.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/ssl_internal.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/sha256.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/ssl_cookie.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/ssl_cookie.o: 

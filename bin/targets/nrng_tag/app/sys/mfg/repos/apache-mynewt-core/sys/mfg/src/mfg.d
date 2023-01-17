@@ -60,4 +60,4 @@ mfg.o: repos/apache-mynewt-core/sys/mfg/src/mfg.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/sys/mfg/include/mfg/mfg.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/mfg/src/mfg.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/mfg/src/mfg.o: 

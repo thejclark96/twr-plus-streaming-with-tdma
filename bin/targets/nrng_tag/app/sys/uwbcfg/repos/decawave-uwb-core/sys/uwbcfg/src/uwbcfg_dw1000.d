@@ -84,4 +84,4 @@ uwbcfg_dw1000.o: repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg_dw1000.c \
  repos/decawave-uwb-dw1000/hw/drivers/uwb/uwb_dw1000/include/dw1000/dw1000_mac.h \
  repos/decawave-uwb-dw1000/hw/drivers/uwb/uwb_dw1000/include/dw1000/dw1000_gpio.h \
  repos/decawave-uwb-dw1000/hw/drivers/uwb/uwb_dw1000/include/dw1000/dw1000_otp.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg_dw1000.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/sys/uwbcfg/src/uwbcfg_dw1000.o: 

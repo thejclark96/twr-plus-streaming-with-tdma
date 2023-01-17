@@ -62,4 +62,4 @@ mn_socket_aconv.o: \
  repos/apache-mynewt-core/sys/log/common/include/log_common/log_common.h \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/net/ip/mn_socket/include/mn_socket/mn_socket.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/net/ip/mn_socket/src/mn_socket_aconv.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/net/ip/mn_socket/src/mn_socket_aconv.o: 

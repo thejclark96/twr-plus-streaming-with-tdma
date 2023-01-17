@@ -72,4 +72,4 @@ bcast_ota_nmgr.o: \
  repos/decawave-uwb-core/mgmt/bcast_ota/include/bcast_ota/bcast_ota.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_system.h \
  repos/decawave-uwb-core/mgmt/bcast_ota/src/bcast_ota_priv.h
-/home/joel/Capstone/uwb-apps/repos/decawave-uwb-core/mgmt/bcast_ota/src/bcast_ota_nmgr.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/decawave-uwb-core/mgmt/bcast_ota/src/bcast_ota_nmgr.o: 

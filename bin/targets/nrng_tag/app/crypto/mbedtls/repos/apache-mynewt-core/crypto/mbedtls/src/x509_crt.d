@@ -78,4 +78,4 @@ x509_crt.o: repos/apache-mynewt-core/crypto/mbedtls/src/x509_crt.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/pem.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/x509_crt.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/x509_crt.o: 

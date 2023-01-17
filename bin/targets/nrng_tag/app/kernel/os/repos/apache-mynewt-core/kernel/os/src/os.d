@@ -65,4 +65,4 @@ os.o: repos/apache-mynewt-core/kernel/os/src/os.c \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_bsp.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_system.h \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_watchdog.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/kernel/os/src/os.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/kernel/os/src/os.o: 

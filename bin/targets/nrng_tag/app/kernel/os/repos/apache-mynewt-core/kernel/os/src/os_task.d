@@ -61,4 +61,4 @@ os_task.o: repos/apache-mynewt-core/kernel/os/src/os_task.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/kernel/os/src/os_priv.h \
  repos/apache-mynewt-core/sys/console/full/include/console/console.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/kernel/os/src/os_task.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/kernel/os/src/os_task.o: 

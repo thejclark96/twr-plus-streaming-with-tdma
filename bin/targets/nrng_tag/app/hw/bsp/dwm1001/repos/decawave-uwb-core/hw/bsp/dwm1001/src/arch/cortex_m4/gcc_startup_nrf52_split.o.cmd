@@ -188,5 +188,5 @@ assembler-with-cpp
 -Itargets/nrng_tag/src/arch/cortex_m4
 -c
 -o
-/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/hw/bsp/dwm1001/repos/decawave-uwb-core/hw/bsp/dwm1001/src/arch/cortex_m4/gcc_startup_nrf52_split.o
+/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/hw/bsp/dwm1001/repos/decawave-uwb-core/hw/bsp/dwm1001/src/arch/cortex_m4/gcc_startup_nrf52_split.o
 repos/decawave-uwb-core/hw/bsp/dwm1001/src/arch/cortex_m4/gcc_startup_nrf52_split.s

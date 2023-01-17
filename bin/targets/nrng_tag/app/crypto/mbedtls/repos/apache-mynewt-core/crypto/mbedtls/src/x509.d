@@ -77,4 +77,4 @@ x509.o: repos/apache-mynewt-core/crypto/mbedtls/src/x509.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/x509.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/pem.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/x509.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/x509.o: 

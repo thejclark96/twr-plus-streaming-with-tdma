@@ -64,4 +64,4 @@ uart_hal.o: \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_uart.h \
  repos/apache-mynewt-core/hw/drivers/uart/include/uart/uart.h \
  repos/apache-mynewt-core/hw/drivers/uart/uart_hal/include/uart_hal/uart_hal.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/drivers/uart/uart_hal/src/uart_hal.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/drivers/uart/uart_hal/src/uart_hal.o: 

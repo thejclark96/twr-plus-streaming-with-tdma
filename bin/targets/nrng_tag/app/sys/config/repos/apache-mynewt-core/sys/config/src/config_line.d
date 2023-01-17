@@ -7,4 +7,4 @@ config_line.o: repos/apache-mynewt-core/sys/config/src/config_line.c \
  repos/apache-mynewt-core/kernel/os/include/os/queue.h \
  repos/apache-mynewt-core/sys/sys/include/sys/queue.h \
  repos/apache-mynewt-core/sys/config/src/config_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/config/src/config_line.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/config/src/config_line.o: 

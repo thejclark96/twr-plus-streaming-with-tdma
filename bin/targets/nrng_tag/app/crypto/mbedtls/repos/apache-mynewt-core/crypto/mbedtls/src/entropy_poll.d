@@ -67,4 +67,4 @@ entropy_poll.o: \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/config.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/sha256.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/entropy_poll.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/entropy_poll.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/entropy_poll.o: 

@@ -68,4 +68,4 @@ bignum.o: repos/apache-mynewt-core/crypto/mbedtls/src/bignum.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/bignum.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform_util.h \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/platform.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/crypto/mbedtls/src/bignum.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/crypto/mbedtls/src/bignum.o: 

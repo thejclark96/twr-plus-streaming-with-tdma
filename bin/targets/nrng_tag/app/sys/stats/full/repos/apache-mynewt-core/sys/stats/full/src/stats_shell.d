@@ -62,4 +62,4 @@ stats_shell.o: repos/apache-mynewt-core/sys/stats/full/src/stats_shell.c \
  repos/apache-mynewt-core/sys/shell/include/shell/shell.h \
  repos/apache-mynewt-core/util/streamer/include/streamer/streamer.h \
  repos/apache-mynewt-core/sys/stats/full/include/stats/stats.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/stats/full/src/stats_shell.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/stats/full/src/stats_shell.o: 

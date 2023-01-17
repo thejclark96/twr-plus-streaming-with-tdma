@@ -16,4 +16,4 @@ nrf52_hw_id.o: \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/nrf51_to_nrf52.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/nrf52_name_change.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/compiler_abstraction.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/nrf52_hw_id.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/nrf52_hw_id.o: 

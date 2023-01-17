@@ -63,4 +63,4 @@ hal_uart.o: \
  repos/apache-mynewt-core/hw/hal/include/hal/hal_uart.h \
  repos/decawave-uwb-core/hw/bsp/dwm1001/include/bsp/bsp.h \
  repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/include/mcu/nrf52_hal.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_uart.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/mcu/nordic/nrf52xxx/src/hal_uart.o: 

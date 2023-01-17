@@ -1,9 +1,9 @@
 {
   "name": "targets/nrng_tag",
-  "build_time": "2023-01-17T15:49:39-07:00",
+  "build_time": "2023-01-17T17:00:37-07:00",
   "build_version": "0.1.0.0",
   "id": "151c5780dce1843237722fd81408dde2858eabb1c323f7824562a7c291a112c7",
-  "image": "/home/joel/Capstone/uwb-apps/bin/targets/nrng_tag/app/apps/twr_nranges_tdma/twr_nranges_tdma.img",
+  "image": "/home/joel/Capstone/twr-plus-streaming-with-tdma/bin/targets/nrng_tag/app/apps/twr_nranges_tdma/twr_nranges_tdma.img",
   "image_hash": "151c5780dce1843237722fd81408dde2858eabb1c323f7824562a7c291a112c7",
   "loader": "",
   "loader_hash": "",
@@ -302,36 +302,39 @@
   "repos": [
     {
       "name": "apache-mynewt-core",
-      "commit": "420d19078d2a2959775ed87e40e5c4be19edd0ed",
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
       "dirty": true,
-      "url": "https://github.com/thejclark96/uwb-apps.git"
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     },
     {
       "name": "decawave-uwb-apps",
-      "commit": "312c165362469f03a3d4d5147edd89addc1b91b6",
-      "dirty": true
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
+      "dirty": true,
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     },
     {
       "name": "decawave-uwb-core",
-      "commit": "420d19078d2a2959775ed87e40e5c4be19edd0ed",
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
       "dirty": true,
-      "url": "https://github.com/thejclark96/uwb-apps.git"
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     },
     {
       "name": "decawave-uwb-dw1000",
-      "commit": "d44078a96349b7a40e9c2393ea83ca4c2d53ab92",
-      "url": "git@github.com:Decawave/uwb-dw1000.git"
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
+      "dirty": true,
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     },
     {
       "name": "mcuboot",
-      "commit": "420d19078d2a2959775ed87e40e5c4be19edd0ed",
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
       "dirty": true,
-      "url": "https://github.com/thejclark96/uwb-apps.git"
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     },
     {
       "name": "mynewt-timescale-lib",
-      "commit": "948eab9c5fdd8edfa53aa12f0dd7aada6e379c83",
-      "url": "https://github.com/decawave/mynewt-timescale-lib.git"
+      "commit": "f8f04bacab09ff7e2e48e807184d450680138cfc",
+      "dirty": true,
+      "url": "git@github.com:thejclark96/twr-plus-streaming-with-tdma.git"
     }
   ],
   "syscfg": {

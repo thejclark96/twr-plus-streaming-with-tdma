@@ -8,4 +8,4 @@ cborerrorstrings.o: \
  repos/apache-mynewt-core/libc/baselibc/include/klibc/extern.h \
  repos/apache-mynewt-core/libc/baselibc/include/stdio.h \
  repos/apache-mynewt-core/libc/baselibc/include/klibc/inline.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/encoding/tinycbor/src/cborerrorstrings.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/encoding/tinycbor/src/cborerrorstrings.o: 

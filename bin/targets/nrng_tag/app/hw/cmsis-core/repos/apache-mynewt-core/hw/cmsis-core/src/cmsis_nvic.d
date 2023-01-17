@@ -12,4 +12,4 @@ cmsis_nvic.o: repos/apache-mynewt-core/hw/cmsis-core/src/cmsis_nvic.c \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/nrf51_to_nrf52.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/nrf52_name_change.h \
  repos/apache-mynewt-core/hw/mcu/nordic/src/ext/nrfx/mdk/compiler_abstraction.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/hw/cmsis-core/src/cmsis_nvic.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/hw/cmsis-core/src/cmsis_nvic.o: 

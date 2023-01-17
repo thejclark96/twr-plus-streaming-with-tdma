@@ -72,4 +72,4 @@ image_validate.o: repos/mcuboot/boot/bootutil/src/image_validate.c \
  repos/apache-mynewt-core/crypto/mbedtls/include/mbedtls/bignum.h \
  repos/mcuboot/boot/bootutil/src/bootutil_priv.h \
  repos/mcuboot/boot/bootutil/include/bootutil/bootutil.h
-/home/joel/Capstone/uwb-apps/repos/mcuboot/boot/bootutil/src/image_validate.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/mcuboot/boot/bootutil/src/image_validate.o: 

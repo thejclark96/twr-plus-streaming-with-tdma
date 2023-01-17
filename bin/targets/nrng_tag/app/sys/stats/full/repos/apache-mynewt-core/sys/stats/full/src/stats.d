@@ -61,4 +61,4 @@ stats.o: repos/apache-mynewt-core/sys/stats/full/src/stats.c \
  repos/apache-mynewt-core/sys/log/common/include/log_common/ignore.h \
  repos/apache-mynewt-core/sys/stats/full/include/stats/stats.h \
  repos/apache-mynewt-core/sys/stats/full/src/stats_priv.h
-/home/joel/Capstone/uwb-apps/repos/apache-mynewt-core/sys/stats/full/src/stats.o: 
+/home/joel/Capstone/twr-plus-streaming-with-tdma/repos/apache-mynewt-core/sys/stats/full/src/stats.o: 
