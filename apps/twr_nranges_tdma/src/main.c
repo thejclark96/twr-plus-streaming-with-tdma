@@ -78,6 +78,7 @@ uwb_config_updated_cb()
     uwb_config_updated = true;
     return 0;
 }
+
 struct uwbcfg_cbs uwb_cb = {
     .uc_update = uwb_config_updated_cb
 };
