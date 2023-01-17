@@ -233,7 +233,7 @@ tof_comp_cb(uint16_t short_addr)
     return dist_in_meters/uwb_rng_tof_to_meters(1.0);
 }
 
-
+// Main
 int main(int argc, char **argv){
     int rc;
 
