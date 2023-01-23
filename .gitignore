@@ -32,3 +32,4 @@ tags
 # Added by Joel
 bin/**
 /bin/**
+*.o
