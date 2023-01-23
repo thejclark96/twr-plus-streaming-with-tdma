@@ -33,3 +33,4 @@ tags
 bin/**
 /bin/**
 *.o
+bin/targets/
