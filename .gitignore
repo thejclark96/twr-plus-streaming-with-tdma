@@ -31,4 +31,4 @@ tags
 *.swo
 # Added by Joel
 bin/
-/bin/
+/bin/**
