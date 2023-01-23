@@ -30,5 +30,5 @@ tags
 *.swp
 *.swo
 # Added by Joel
-bin/
+bin/**
 /bin/**
