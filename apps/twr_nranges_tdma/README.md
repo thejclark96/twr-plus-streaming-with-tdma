@@ -1,5 +1,5 @@
 # Ranging with n nodes using n+2 messages along with TDMA slotting.
-
+hi
 ## Overview
 This example demonstrates the nrng use case--n ranges measurements with n+2 frames. Here we use the CCP/TDMA to create a synchronous network with a superframe period of 1s and 160 TDMA slots. A tag[s] performs a range request[s] at the beginning of each TDMA slot. The nodes listen for a range request at the beginning [first 200us] of each TDMA slot. A tag can range to 1 to 16 nodes within a single TDMA slot. Each node responses sequential to the request based on their allocated node-slot--Note there are two slot mechanisms at work here; TDMA-slots and a node-slots. The node-slots are spaced approximately 270us apart within the TDMA slot with 16 nodes occupying about 4500us of the available 6300us windows. Practically a tag will range to a subset of available nodes or practically only a subset of the available nodes will be within range of the tag.
 
