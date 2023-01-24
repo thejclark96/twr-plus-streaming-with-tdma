@@ -40,7 +40,7 @@
 #if MYNEWT_VAL(TIMESCALE)
 #include <timescale/timescale.h>
 #endif
-#if MYNEWT_VAL(UWB_WCS_ENABLED)
+#if MYNEWT_VAL(UWB_WCS_ENABLED)     // WCS = wireless clock synchronization
 #include <uwb_wcs/uwb_wcs.h>
 #endif
 #if MYNEWT_VAL(SURVEY_ENABLED)
@@ -65,6 +65,7 @@ uwb_config_updated_cb()
 {
     /* Workaround in case we're stuck waiting for ccp with the
      * wrong radio settings */
+<<<<<<< HEAD
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);      // udev holds all the information about the device itself
     struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
     if (dpl_sem_get_count(&ccp->sem) == 0) {
@@ -72,19 +73,28 @@ uwb_config_updated_cb()
         uwb_mac_config(udev, NULL);
         uwb_txrf_config(udev, &udev->config.txrf);
         uwb_start_rx(udev);
+=======
+    struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
+    struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
+    if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
+        uwb_phy_forcetrxoff(udev);                  // Turns off transceiver
+        uwb_mac_config(udev, NULL);                 // Configure MAC layer, it uses NULL for the uwb_dev_config for some reason
+        uwb_txrf_config(udev, &udev->config.txrf);  // configs transmitter, includes power and pulse generator delay, pointer points to data structure that that holds all configurable items
+        uwb_start_rx(udev);                         // Activate reception mode (rx).
+>>>>>>> 0194e69a (Changed master syscfg to reflect 2 anchors and 1 tag)
         return 0;
     }
 
-    uwb_config_updated = true;
+    uwb_config_updated = true;                      // It seems like every time the configs are updated, this variable gets set to true
     return 0;
 }
-
-struct uwbcfg_cbs uwb_cb = {
-    .uc_update = uwb_config_updated_cb
+// Register callback for UWB configuration changes
+struct uwbcfg_cbs uwb_cb = {                // This block of code seems to appear in every app. I can't figure out why. Nevermind, look at the comment below.
+    .uc_update = uwb_config_updated_cb      // Register callback for UWB configuration changes
 };
 
 
-static void nrng_complete_cb(struct dpl_event *ev) {
+static void nrng_complete_cb(struct dpl_event *ev) {        // DPL = Decawave Porting Layer
     assert(ev != NULL);
     assert(dpl_event_get_arg(ev) != NULL);
 
@@ -129,18 +139,19 @@ static bool complete_cb(struct uwb_dev * inst, struct uwb_mac_interface * cbs)
  *
  * returns none
  */
-
-
 static void
-slot_cb(struct dpl_event * ev){
-    assert(ev);
+slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave Porting Layer)
+    assert(ev);                     // Break if event == NULL
 
-    tdma_slot_t * slot = (tdma_slot_t *) dpl_event_get_arg(ev);
-    tdma_instance_t * tdma = slot->parent;
-    struct uwb_ccp_instance *ccp = tdma->ccp;
-    struct uwb_dev * udev = tdma->dev_inst;
-    uint16_t idx = slot->idx;
-    struct nrng_instance *nrng = (struct nrng_instance *)slot->arg;
+    tdma_slot_t * slot = (tdma_slot_t *) dpl_event_get_arg(ev);     // dpl_event_get_arg takes in os_event(same as dpl_event) and returns the os_event's argument to pass to the event queue callback
+                                                                    // so slot = event callback argument casted to type tdma_slot_t
+    tdma_instance_t * tdma = slot->parent;                          // tdma = slot's parent (type tdma_instance_t)
+
+    struct uwb_ccp_instance *ccp = tdma->ccp;                       // ccp = tdma_instance_t(tdma)->ccp instance (since uwb ccp is enabled)
+                                                                    // AKA ccp = this tdma's ccp instance
+    struct uwb_dev * udev = tdma->dev_inst;                         // udev = this tdma's uwb device instance
+    uint16_t idx = slot->idx;                                       // idx = this tdma_slot_t's slot number
+    struct nrng_instance *nrng = (struct nrng_instance *)slot->arg; // nrng = this tdma_slot_t's optional argument, which in this case is an nrng_instance
 
     /* Avoid colliding with the ccp in case we've got out of sync */
     if (dpl_sem_get_count(&ccp->sem) == 0) {
@@ -156,12 +167,16 @@ slot_cb(struct dpl_event * ev){
         return;
     }
 
-    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return;
+    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return;     // If ccp's epoch==0 AND slot ID is all 1s, return
 
     /* Process any newtmgr packages queued up */
-    if (idx > 6 && idx < (tdma->nslots-6) && (idx%4)==0) {
+    if (idx > 6 && idx < (tdma->nslots-6) && (idx%4)==0) {      // if tdma slot # is greater than 6 AND
+                                                                // less than the (total slots - 6) AND divisible by 4:
+
         nmgr_uwb_instance_t *nmgruwb = (nmgr_uwb_instance_t *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NMGR_UWB);
-        assert(nmgruwb);
+                                                                // WTF does this do
+        assert(nmgruwb);                                        // End if newt mgr instance is NULL
+        
         if (uwb_nmgr_process_tx_queue(nmgruwb, tdma_tx_slot_start(tdma, idx))) {
             return;
         }
