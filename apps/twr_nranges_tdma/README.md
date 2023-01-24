@@ -95,37 +95,9 @@ newt run nrng_tag 0.1.0
 newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_tag build_profile=optimized
-newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=3:NRNG_NFRAMES=6:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=5:NRNG_VERBOSE=1
-#newt target amend nrng_tag syscfg=NRNG_DEVICE_TYPE=0
-newt run nrng_tag 0.1.0
-
-
-
-
--- THIS ONE SEEMS TO WORK PRETTY WELL --
-newt target create nrng_tag
-newt target set nrng_tag app=apps/twr_nranges_tdma
-newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=4:NRNG_NFRAMES=8:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=15:NRNG_VERBOSE=1
+newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=2:NRNG_NFRAMES=4:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
 newt run nrng_tag 0.1.0
-
-
-
-
--- NOT THIS
-<!-- ---Trying out this configuration:---
-newt target create nrng_tag
-newt target set nrng_tag app=apps/twr_nranges_tdma
-newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=8:NRNG_NFRAMES=16:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
-#newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=3:NRNG_NFRAMES=6:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
-newt target amend nrng_tag syscfg=CONSOLE_RTT=0:CONSOLE_UART=1
-#newt target amend nrng_tag syscfg=NRNG_HUMAN_READABLE_RANGES=1
-#newt target amend nrng_tag syscfg=BLEPRPH_ENABLED=1
-newt run nrng_tag 0.1.0 -->
 
 
 ```
