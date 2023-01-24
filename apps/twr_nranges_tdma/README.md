@@ -5,6 +5,37 @@ This example demonstrates the nrng use case--n ranges measurements with n+2 fram
 
 The example also illustrates the WCS (Wireless Clock Synchronization) capability, here the TOA (Time Of Arrival) timestamps are reported in master clock (node0) reference frame.
 
+4. To erase the default flash image that shipped with the DWM1001.
+
+```no-highlight
+$ JLinkExe -device nRF52 -speed 4000 -if SWD
+J-Link>erase
+J-Link>exit
+$
+```
+
+or if you have nrfjprog ([Nordic Cmd Tools](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download)) installed:
+
+```
+    $ nrfjprog -f NRF52 -e
+```
+
+
+5. Build the new bootloader applicaiton for the DWM1001 target.
+
+(executed from the mynewt-dw1000-app directory).
+
+```no-highlight
+
+newt target create dwm1001_boot
+newt target set dwm1001_boot app=@mcuboot/boot/mynewt
+newt target set dwm1001_boot bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set dwm1001_boot build_profile=optimized
+newt build dwm1001_boot
+newt load dwm1001_boot
+
+```
+
 ### Building target for (up to) 8 nodes
 
 Master node (only one allowed per network):
