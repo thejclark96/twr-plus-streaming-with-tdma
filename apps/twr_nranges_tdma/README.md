@@ -96,7 +96,12 @@ newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
+<<<<<<< HEAD
 newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=2:NRNG_NFRAMES=4:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
+=======
+newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=2:NRNG_NFRAMES=4:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=2
+newt target amend nrng_tag syscfg=NRNG_VERBOSE=1
+>>>>>>> c918c42d (Changed master syscfg to reflect 2 anchors and 1 tag)
 newt run nrng_tag 0.1.0
 
 
