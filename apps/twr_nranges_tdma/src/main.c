@@ -65,31 +65,16 @@ uwb_config_updated_cb()
 {
     /* Workaround in case we're stuck waiting for ccp with the
      * wrong radio settings */
-<<<<<<< HEAD
-<<<<<<< HEAD
-    struct uwb_dev * udev = uwb_dev_idx_lookup(0);      // udev holds all the information about the device itself
-    struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
-    if (dpl_sem_get_count(&ccp->sem) == 0) {
-        uwb_phy_forcetrxoff(udev);
-        uwb_mac_config(udev, NULL);
-        uwb_txrf_config(udev, &udev->config.txrf);
-        uwb_start_rx(udev);
-=======
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
     struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
-=======
-    struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
-    struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
->>>>>>> 7ddc8a66 (Changed master syscfg to reflect 2 anchors and 1 tag)
+    
     if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
+
         uwb_phy_forcetrxoff(udev);                  // Turns off transceiver
         uwb_mac_config(udev, NULL);                 // Configure MAC layer, it uses NULL for the uwb_dev_config for some reason
         uwb_txrf_config(udev, &udev->config.txrf);  // configs transmitter, includes power and pulse generator delay, pointer points to data structure that that holds all configurable items
         uwb_start_rx(udev);                         // Activate reception mode (rx).
-<<<<<<< HEAD
->>>>>>> 0194e69a (Changed master syscfg to reflect 2 anchors and 1 tag)
-=======
->>>>>>> 7ddc8a66 (Changed master syscfg to reflect 2 anchors and 1 tag)
+
         return 0;
     }
 
