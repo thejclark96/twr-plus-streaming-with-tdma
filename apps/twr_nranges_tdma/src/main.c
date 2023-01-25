@@ -152,11 +152,11 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
     }
 
     /* Update config if needed */
-    if (uwb_config_updated) {
-        uwb_config_updated = false;
-        uwb_phy_forcetrxoff(udev);
-        uwb_mac_config(udev, NULL);
-        uwb_txrf_config(udev, &udev->config.txrf);
+    if (uwb_config_updated) {                                       // If config has been updated:
+        uwb_config_updated = false;                                 // Set to false
+        uwb_phy_forcetrxoff(udev);                                  // Force the transceiver to turn off 
+        uwb_mac_config(udev, NULL);                                 // Configure the MAC layer of the UWB Device. udev is the pointer to the device, the "NULL" argument is probably used as a placeholder for some reason.
+        uwb_txrf_config(udev, &udev->config.txrf);                  // configure the transmitter of the UWB device,  sets the power level and pulse generator delay for the transmitter, and the "&udev->config.txrf" argument is likely a pointer to a struct that holds all the configurable items for the transmitter.
         return;
     }
 
@@ -167,7 +167,7 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
                                                                 // less than the (total slots - 6) AND divisible by 4:
 
         nmgr_uwb_instance_t *nmgruwb = (nmgr_uwb_instance_t *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NMGR_UWB);
-                                                                // WTF does this do
+                                                                // Likely used to find a specific callback instance pointer which is likely related to the newtmgr package queued up
 
         assert(nmgruwb);                                        // End if newt mgr instance is NULL
         
@@ -193,26 +193,27 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
         nrng_listen(nrng, UWB_BLOCKING);                                // Initialise range request and start blocking
 
 
-    } else {                                                            // If device IS NOT an ANCHOR
+    } else { // If device is NOT an ANCHOR
         /* Range with the anchors */
-        if (idx%MYNEWT_VAL(NRNG_NTAGS) != udev->slot_id) {      // NRNG_NTAGS   = Max number of tags to allow in slots
-            return;                                             // slot_id      =  Assigned slot_id
-        }
+        if (idx%MYNEWT_VAL(NRNG_NTAGS) != udev->slot_id) {              // NRNG_NTAGS = Max number of tags to allow in slots | slot_id =  Assigned slot_id
+            return;                                                     // Checks if current slot index (idx) % max # of tags != the device's slot id
+        }                                                               // If this is not the right slot index for the current device, do NOT attempt to range
 
         /* Range with the anchors */
-        uint64_t dx_time = tdma_tx_slot_start(tdma, idx) & 0xFFFFFFFFFE00UL;
+        uint64_t dx_time = tdma_tx_slot_start(tdma, idx) & 0xFFFFFFFFFE00UL; // dx_time=Delay before starting TX, in dwt timeunits (uwb usecs << 16).
+                                                                        // Calculates rx time using bitwise AND operation to clear some of the lower bits of the start time
         uint32_t slot_mask = 0;
-        for (uint16_t i = MYNEWT_VAL(NODE_START_SLOT_ID);
-             i <= MYNEWT_VAL(NODE_END_SLOT_ID); i++) {
+        for (uint16_t i = MYNEWT_VAL(NODE_START_SLOT_ID);               // Creates slot mask variable then sets bits corresponding to slot range
+             i <= MYNEWT_VAL(NODE_END_SLOT_ID); i++) {                  // given from SYSCFG.YML! 
             slot_mask |= 1UL << i;
         }
 
-        if(nrng_request_delay_start(
+        if(nrng_request_delay_start(                                    // Start transmission after delay (dx_time)
                nrng, UWB_BROADCAST_ADDRESS, dx_time,
                UWB_DATA_CODE_SS_TWR_NRNG, slot_mask, 0).start_tx_error) {
             uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
             printf("{\"utime\": %lu,\"msg\": \"slot_timer_cb_%d:start_tx_error\"}\n",
-                   utime,idx);
+                   utime,idx);                                          // If the function returns a "start_tx_error", it prints an error message to the console.
         }
     }
 }
