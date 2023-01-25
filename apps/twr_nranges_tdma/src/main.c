@@ -89,16 +89,21 @@ struct uwbcfg_cbs uwb_cb = {                        // This block of code seems 
     .uc_update = uwb_config_updated_cb              // Register callback for UWB configuration changes
 };
 
-
+/*
+"nrng_complete_cb", which is a callback function that gets triggered when a "dpl_event" (Decawave Porting Layer event) occurs. The function starts by asserting that the input "ev" is not NULL and that the argument of the event is not NULL. It then toggles the state of the blue LED on the device. It then assigns the "nrng" variable to the nrng_instance struct that is passed as the argument of the dpl_event. It also assigns the variable "frame" to a specific element of the "frames" array of the nrng_instance struct.
+The function then has some code inside a preprocessor directive "#ifdef VERBOSE" which is only executed if the preprocessor symbol "VERBOSE" is defined. This code is only there for debugging purposes and prints out various error messages if certain conditions are met.
+The last step in the function is to check if the code of the "frame" variable is equal to either UWB_DATA_CODE_DS_TWR_NRNG_FINAL or UWB_DATA_CODE_DS_TWR_NRNG_EXT_FINAL, if so the code of the frame variable is set to UWB_DATA_CODE_DS_TWR_NRNG_END.
+*/
 static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting Layer
-    assert(ev != NULL);
+    assert(ev != NULL);                             // Checks if event and event argument is NOT NULL
     assert(dpl_event_get_arg(ev) != NULL);
 
-    hal_gpio_toggle(LED_BLINK_PIN);     // Blue LED
-    struct nrng_instance * nrng = (struct nrng_instance *) dpl_event_get_arg(ev);
-    nrng_frame_t * frame = nrng->frames[(nrng->idx)%nrng->nframes];     // Frame array
+    hal_gpio_toggle(LED_BLINK_PIN);                 // Toggle blue LED
 
-#ifdef VERBOSE
+    struct nrng_instance * nrng = (struct nrng_instance *) dpl_event_get_arg(ev);
+    nrng_frame_t * frame = nrng->frames[(nrng->idx)%nrng->nframes];
+
+#ifdef VERBOSE                                      // If VERBOSE enabled, prints out more info for debugging errors
     if (inst->status.start_rx_error)
         printf("{\"utime\": %lu,\"timer_ev_cb\": \"start_rx_error\"}\n",os_cputime_ticks_to_usecs(os_cputime_get32()));
     if (inst->status.start_tx_error)
@@ -108,25 +113,32 @@ static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting La
     if (inst->status.rx_timeout_error)
         printf("{\"utime\": %lu,\"timer_ev_cb\":\"rx_timeout_error\"}\n",os_cputime_ticks_to_usecs(os_cputime_get32()));
 #endif
+
     if (frame->code == UWB_DATA_CODE_DS_TWR_NRNG_FINAL || frame->code == UWB_DATA_CODE_DS_TWR_NRNG_EXT_FINAL){
-        frame->code = UWB_DATA_CODE_DS_TWR_NRNG_END;
+        frame->code = UWB_DATA_CODE_DS_TWR_NRNG_END;// Checks the frame type, if a final frame (either extended type or regular), frame type is changed to END type. Looks like it ony applies is double sided (DS) twr is enabled
     }
 }
 
+/*
+Defines a static variable called "nrng_complete_event" of type "struct dpl_event" and a function called "complete_cb" that takes in two arguments of type "struct uwb_dev *" and "struct uwb_mac_interface *". The function checks if the "fctrl" field of the "uwb_dev" struct is equal to "FCNTL_IEEE_RANGE_16", if so, it puts the "nrng_complete_event" into the default event queue using the "dpl_eventq_put" function and returns true. If the "fctrl" field is not equal to "FCNTL_IEEE_RANGE_16", the function returns false.
+*/
 static struct dpl_event nrng_complete_event;
 static bool complete_cb(struct uwb_dev * inst, struct uwb_mac_interface * cbs)
 {
-    if(inst->fctrl != FCNTL_IEEE_RANGE_16){
+    if(inst->fctrl != FCNTL_IEEE_RANGE_16){         // Checks if received frame is an IEEE range frame
         return false;
     }
     dpl_eventq_put(dpl_eventq_dflt_get(), &nrng_complete_event);
-    return true;
+    return true;                                    // If true, puts the "nrng_complete_event" into the default event queue
 }
 
 /*!
  * @fn slot_timer_cb(struct os_event * ev)
  *
  * @brief In this example this timer callback is used to start_rx.
+ * This code is a callback function that gets called when a TDMA slot event occurs. It is intended to be used in a TDMA-based protocol for wireless communication.
+ * The function starts by casting the event argument to a pointer to a tdma_slot_t struct, and then uses this struct to access information about the TDMA instance and the UWB device instance. It then checks various conditions, such as if the UWB device's role is an anchor or a tag and if the current idx is greater than 6 and less than the total number of slots minus 6 and is divisible by 4, and based on these conditions, it performs different operations.
+ * Some of the operations performed include configuring the UWB device and its PHY and TXRF settings, processing the transmission queue for the nmgr_uwb_instance, starting ranging operations, and sending range requests to other devices. The function also includes debug output for certain conditions, such as if a transmission error occurs.
  *
  * input parameters
  * @param inst - struct os_event *
@@ -135,8 +147,7 @@ static bool complete_cb(struct uwb_dev * inst, struct uwb_mac_interface * cbs)
  *
  * returns none
  */
-static void
-slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave Porting Layer)
+static void slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave Porting Layer)
     assert(ev);                     // Break if event == NULL
 
     tdma_slot_t * slot = (tdma_slot_t *) dpl_event_get_arg(ev);     // dpl_event_get_arg takes in os_event(same as dpl_event) and returns the os_event's argument to pass to the event queue callback
@@ -221,10 +232,14 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
     }
 }
 
-static void
-pan_complete_cb(struct dpl_event * ev)
+
+/*
+This code defines a callback function pan_complete_cb() that is called when a PAN (personal area network) operation is completed. The function takes a single argument, a pointer to a dpl_event structure. The code uses the dpl_event_get_arg() function to retrieve the argument passed to the event, which is expected to be a pointer to a uwb_pan_instance structure.
+The function then checks the slot_id field of the uwb_dev structure that is embedded inside the uwb_pan_instance to see if it is equal to 0xffff. If it is, the function does nothing. If it is not, the function uses the printf() function to print two messages to the console. The first message is a JSON string that contains the current time in microseconds, as well as the value of the slot_id field. The second message is also a JSON string that contains the current time in microseconds, as well as the value of the device's short address(euid16). It's likely that this function is used for logging or debugging purposes.
+*/
+static void pan_complete_cb(struct dpl_event * ev)
 {
-    assert(ev != NULL);
+    assert(ev != NULL);                                                 // Verify event and event argument are both not NULL
     assert(dpl_event_get_arg(ev) != NULL);
     struct uwb_pan_instance *pan = (struct uwb_pan_instance*) dpl_event_get_arg(ev);
 
@@ -240,8 +255,7 @@ pan_complete_cb(struct dpl_event * ev)
  * Ideally this should use a map generated and make use of the euid in case
  * the ccp packet is relayed through another node.
  */
-static uint32_t
-tof_comp_cb(uint16_t short_addr)
+static uint32_t tof_comp_cb(uint16_t short_addr)
 {
     float x = MYNEWT_VAL(UWB_CCP_TOF_COMP_LOCATION_X);
     float y = MYNEWT_VAL(UWB_CCP_TOF_COMP_LOCATION_Y);
@@ -254,6 +268,8 @@ tof_comp_cb(uint16_t short_addr)
     return dist_in_meters/uwb_rng_tof_to_meters(1.0);
 }
 
+
+
 // Main
 int main(int argc, char **argv){
     int rc;
@@ -262,31 +278,34 @@ int main(int argc, char **argv){
     uwbcfg_register(&uwb_cb);
     conf_load();
 
-    hal_gpio_init_out(LED_BLINK_PIN, 1);
-    hal_gpio_init_out(LED_1, 1);
-    hal_gpio_init_out(LED_3, 1);
+    hal_gpio_init_out(LED_BLINK_PIN, 1);    // Blue
+    hal_gpio_init_out(LED_1, 1);            // Green
+    hal_gpio_init_out(LED_3, 1);            // Red
 
-    struct uwb_dev * udev = uwb_dev_idx_lookup(0);
-    udev->config.rxauto_enable = false;
-    udev->config.dblbuffon_enabled = false;
-    uwb_set_dblrxbuff(udev, udev->config.dblbuffon_enabled);
+    struct uwb_dev * udev = uwb_dev_idx_lookup(0);              // Grab device instance, assign to udev
+    udev->config.rxauto_enable = false;                         // Turn of rx auto enable
+    udev->config.dblbuffon_enabled = false;                     // disable double buffer in device settings
+    uwb_set_dblrxbuff(udev, udev->config.dblbuffon_enabled);    // Applies double buffer disabled setting
 
     struct nrng_instance* nrng = (struct nrng_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
-    assert(nrng);
+    assert(nrng);   // this code initializes a pointer to a struct and makes sure that the returned pointer points to a valid location in the memory before proceeding with the code.
 
-    dpl_event_init(&nrng_complete_event, nrng_complete_cb, nrng);
-    
-    struct uwb_mac_interface cbs = (struct uwb_mac_interface){
-        .id = UWBEXT_APP0,
-        .inst_ptr = nrng,
-        .complete_cb = complete_cb
+    dpl_event_init(&nrng_complete_event, nrng_complete_cb, nrng);// Initializes dpl event with inputs: dpl_event, dpl_event_fn, and an argument, nrng (nrng_instance type)
+
+    //This code is initializing a struct uwb_mac_interface called "cbs" with the id UWBEXT_APP0, a pointer to the instance "nrng", and a callback function "complete_cb". Then it is calling the function "uwb_mac_append_interface" with the "udev" device and the "cbs" struct as arguments. This function probably adds the "cbs" struct to the list of interfaces associated with the "udev" device.
+    struct uwb_mac_interface cbs = (struct uwb_mac_interface){  //! Structure of extension callbacks structure common for mac layer.
+        .id = UWBEXT_APP0,                                      //!< Identifier
+        .inst_ptr = nrng,                                       //!< Pointer to instance owning this interface
+        .complete_cb = complete_cb                              //!< Completion event interface callback
     };
 
-    uwb_mac_append_interface(udev, &cbs);
-    udev->slot_id = 0xffff;
+    uwb_mac_append_interface(udev, &cbs);                       // Adds cdbs struct to list of interfaces associated with device "udev"
+    udev->slot_id = 0xffff;                                     // Changes this device's slot_id to 0xffff, I'm not sure why
+
 #if MYNEWT_VAL(BLEPRPH_ENABLED)
-    ble_init(udev->euid);
+    ble_init(udev->euid);                                       // initializes the BLE stack if the BLE peripheral is enabled in the MYNEWT_VAL configuration.
 #endif
+    // Creates ccp, pan and rng structs then ensures instances are present and correctly initialized via assert statements
     struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);
     assert(ccp);
     struct uwb_pan_instance *pan = (struct uwb_pan_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_PAN);
@@ -294,34 +313,39 @@ int main(int argc, char **argv){
     struct uwb_rng_instance* rng = (struct uwb_rng_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_RNG);
     assert(rng);
 
-    if (udev->role&UWB_ROLE_CCP_MASTER) {
-        /* Start as clock-master */
+    if (udev->role&UWB_ROLE_CCP_MASTER) {                       // If device is master node (anchor), it starts as the ccp clock master
+        /* Start as clock-master */                             // API to start clock calibration packets (CCP) blinks with a pulse repetition period of MYNEWT_VAL(UWB_CCP_PERIOD).
         uwb_ccp_start(ccp, CCP_ROLE_MASTER);
     } else {
-        uwb_ccp_start(ccp, CCP_ROLE_SLAVE);
-        uwb_ccp_set_tof_comp_cb(ccp, tof_comp_cb);
+        uwb_ccp_start(ccp, CCP_ROLE_SLAVE);                     // If slave anchor or tag, start as clock slave
+        uwb_ccp_set_tof_comp_cb(ccp, tof_comp_cb);              // Sets the CB that estimate the tof in dw units to the node with euid provided as paramater. Used to compensate for the tof from the clock source
     }
 
     if (udev->role&UWB_ROLE_PAN_MASTER) {
         /* As pan-master, first lookup our address and slot_id */
         struct image_version fw_ver;
         struct panmaster_node *node;
+
         panmaster_idx_find_node(udev->euid, NETWORK_ROLE_ANCHOR, &node);
-        assert(node);
-        imgr_my_version(&fw_ver);
-        node->fw_ver.iv_major = fw_ver.iv_major;
+        assert(node);                                           // I think this might check if the panmaster is seen as an anchor and asserts if that's true
+
+        imgr_my_version(&fw_ver);                               // Returns version number of current image (if available)
+        node->fw_ver.iv_major = fw_ver.iv_major;                // Then assigns all firmware version data to the node's struct
         node->fw_ver.iv_minor = fw_ver.iv_minor;
         node->fw_ver.iv_revision = fw_ver.iv_revision;
         node->fw_ver.iv_build_num = fw_ver.iv_build_num;
-        udev->my_short_address = node->addr;
-        udev->slot_id = node->slot_id;
+
+        udev->my_short_address = node->addr;                    // Assign short address to pan_master node struct element, addr
+        udev->slot_id = node->slot_id;                          // Assign slot ID so corresponding pan_master node slot ID
         panmaster_postprocess();
         uwb_pan_start(pan, UWB_PAN_ROLE_MASTER, NETWORK_ROLE_ANCHOR);
-    } else {
+        // ^^ A Personal Area Network blink is a discovery phase in which a TAG/ANCHOR seeks to discover an available PAN Master. The pan_master does not need to call this function.
+
+    } else {    // If NOT the master anchor/node:
         uwb_pan_set_postprocess(pan, pan_complete_cb);
-        network_role_t role = (udev->role&UWB_ROLE_ANCHOR)?
+        network_role_t role = (udev->role&UWB_ROLE_ANCHOR)?     // Assign NETWORK role as anchor or tag
             NETWORK_ROLE_ANCHOR : NETWORK_ROLE_TAG;
-        uwb_pan_start(pan, UWB_PAN_ROLE_RELAY, role);
+        uwb_pan_start(pan, UWB_PAN_ROLE_RELAY, role);           // Start pan as pan relay, not master (or slave) for some reason
     }
 
     uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
