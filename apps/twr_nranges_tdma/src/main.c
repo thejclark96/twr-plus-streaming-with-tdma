@@ -167,9 +167,11 @@ slot_cb(struct dpl_event * ev){
         }
     }
 
+
+
     if (udev->role&UWB_ROLE_ANCHOR) {
         /* Listen for a ranging tag */
-        uwb_set_delay_start(udev, tdma_rx_slot_start(tdma, idx));
+        uwb_set_delay_start(udev, tdma_rx_slot_start(tdma, idx)); //second parameter is the delayed send/recieve time, in dwt timeunits = UWB microseconds * 65535
         uint16_t timeout = uwb_phy_frame_duration(udev, sizeof(nrng_request_frame_t))
             + nrng->config.rx_timeout_delay;
 
