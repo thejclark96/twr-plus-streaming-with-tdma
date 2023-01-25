@@ -58,23 +58,26 @@
 #include <bootutil/image.h>
 
 #endif
-
-static bool uwb_config_updated = false;
-int
-uwb_config_updated_cb()
+/*
+The first part, starting with the declaration of the static variable "uwb_config_updated", defines a callback function "uwb_config_updated_cb()" that is triggered when there is an update to the UWB (Ultra-Wideband) configuration. This function is intended as a workaround in case the system is stuck waiting for a Clock Calibration Packet (CCP) with the wrong radio settings. It starts by looking up the device information in the "udev" variable, and then it looks up the Clock Calibration Packet (CCP) instance in the "ccp" variable.
+The function then checks if there are no CCP semaphores by calling "dpl_sem_get_count(&ccp->sem)" and if there are none, it turns off the transceiver with "uwb_phy_forcetrxoff(udev)", configures the MAC layer with "uwb_mac_config(udev, NULL)", configures the transmitter with "uwb_txrf_config(udev, &udev->config.txrf)", and activates reception mode (rx) with "uwb_start_rx(udev)".
+If there are CCP semaphores, the function sets the "uwb_config_updated" variable to true, and returns 0.
+*/
+static bool uwb_config_updated = false;             // Flag to indicate whether the UWB configuration has been updated.
+int uwb_config_updated_cb()
 {
-    /* Workaround in case we're stuck waiting for ccp with the
-     * wrong radio settings */
+    /* Workaround in case we're stuck waiting for ccp with the wrong radio settings */
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
-    struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
-    
-    if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
+                                                    // Likely used to look up a UWB device by its index. Arg 0 is likely used to refer to the first device.
 
+    struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);    // CCP = Clock Calibration Packet
+                                                    // Finds the first instance pointer to the callback structure setup with a specific id(for this case it's UWBEXT_CCP).
+
+    if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
         uwb_phy_forcetrxoff(udev);                  // Turns off transceiver
         uwb_mac_config(udev, NULL);                 // Configure MAC layer, it uses NULL for the uwb_dev_config for some reason
         uwb_txrf_config(udev, &udev->config.txrf);  // configs transmitter, includes power and pulse generator delay, pointer points to data structure that that holds all configurable items
         uwb_start_rx(udev);                         // Activate reception mode (rx).
-
         return 0;
     }
 
