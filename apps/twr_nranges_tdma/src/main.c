@@ -67,7 +67,7 @@ uwb_config_updated_cb()
      * wrong radio settings */
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
     struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
-
+    
     if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
 
         uwb_phy_forcetrxoff(udev);                  // Turns off transceiver
@@ -87,7 +87,7 @@ struct uwbcfg_cbs uwb_cb = {                        // This block of code seems 
 };
 
 
-static void nrng_complete_cb(struct dpl_event *ev) {        // DPL = Decawave Porting Layer
+static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting Layer
     assert(ev != NULL);
     assert(dpl_event_get_arg(ev) != NULL);
 
@@ -160,7 +160,7 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
         return;
     }
 
-    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return;     // If ccp's epoch==0 AND slot ID is all 1s, return
+    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return; // If ccp's epoch==0 AND slot ID is all 1s, return
 
     /* Process any newtmgr packages queued up */
     if (idx > 6 && idx < (tdma->nslots-6) && (idx%4)==0) {      // if tdma slot # is greater than 6 AND
@@ -168,6 +168,7 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
 
         nmgr_uwb_instance_t *nmgruwb = (nmgr_uwb_instance_t *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NMGR_UWB);
                                                                 // WTF does this do
+
         assert(nmgruwb);                                        // End if newt mgr instance is NULL
         
         if (uwb_nmgr_process_tx_queue(nmgruwb, tdma_tx_slot_start(tdma, idx))) {
@@ -176,17 +177,23 @@ slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dpl = Decawave
     }
 
 
-
-    if (udev->role&UWB_ROLE_ANCHOR) {
+    
+    if (udev->role&UWB_ROLE_ANCHOR) {                                   // ONLY ANCHORS run this code
         /* Listen for a ranging tag */
-        uwb_set_delay_start(udev, tdma_rx_slot_start(tdma, idx)); //second parameter is the delayed send/recieve time, in dwt timeunits = UWB microseconds * 65535
-        uint16_t timeout = uwb_phy_frame_duration(udev, sizeof(nrng_request_frame_t))
-            + nrng->config.rx_timeout_delay;
+        uwb_set_delay_start(udev, tdma_rx_slot_start(tdma, idx));       // Specify a time in future to turn on the receiver
+                                                                        // Second parameter is the delayed send/recieve time, in dwt timeunits = UWB microseconds * 65535
+
+        uint16_t timeout = uwb_phy_frame_duration(udev, sizeof(nrng_request_frame_t))   // Calculate the frame duration (airtime) in usecs (not uwb usecs)
+            + nrng->config.rx_timeout_delay;                                            // timeout = frame duration + receive response timeout
 
         /* Padded timeout to allow us to receive any nmgr packets too */
-        uwb_set_rx_timeout(udev, timeout + 0x1000);
-        nrng_listen(nrng, UWB_BLOCKING);
-    } else {
+        uwb_set_rx_timeout(udev, timeout + 0x1000);                     // Indicates how long the receiver remains on from the RX enable command. The time parameter used here is in 1.0256 * us (512/499.2MHz) units. If set to 0 the timeout is disabled.
+                                                                        // When using .rxauto_enable feature it is important to understand the role of rx_timeout, in this situation it is the timeout that actually turns-off the receiver and returns the transeiver to the idle state. NOTE: On dw1000 the timeout is a 16bit field only.
+
+        nrng_listen(nrng, UWB_BLOCKING);                                // Initialise range request and start blocking
+
+
+    } else {                                                            // If device IS NOT an ANCHOR
         /* Range with the anchors */
         if (idx%MYNEWT_VAL(NRNG_NTAGS) != udev->slot_id) {      // NRNG_NTAGS   = Max number of tags to allow in slots
             return;                                             // slot_id      =  Assigned slot_id
