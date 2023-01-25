@@ -67,7 +67,7 @@ uwb_config_updated_cb()
      * wrong radio settings */
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);  // udev holds all the information about the device itself
     struct uwb_ccp_instance *ccp = (struct uwb_ccp_instance*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_CCP);        // CCP = Clock Calibration Packet
-
+    
     if (dpl_sem_get_count(&ccp->sem) == 0) {        // Checks if there are no CCP semaphores
 
         uwb_phy_forcetrxoff(udev);                  // Turns off transceiver
