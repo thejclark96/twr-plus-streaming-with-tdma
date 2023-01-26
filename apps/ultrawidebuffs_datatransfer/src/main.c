@@ -129,7 +129,7 @@ range_slot_cb(struct dpl_event * ev){
         return;
     }
 
-    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return;
+    if ->local_epoch==0 || udev->slot_id == 0xffff) return;
 
     if (udev->role&UWB_ROLE_ANCHOR) {
         /* Listen for a ranging tag */

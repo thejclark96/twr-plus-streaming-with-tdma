@@ -57,26 +57,6 @@ newt target set nrng_slave_node build_profile=debug
 newt target amend nrng_slave_node syscfg=NRANGES_ANCHOR=1
 newt run nrng_slave_node 0.1.0
 
-newt target create nrng_slave_node2
-newt target set nrng_slave_node2 app=apps/twr_nranges_tdma
-newt target set nrng_slave_node2 bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_slave_node2 build_profile=optimized
-newt target amend nrng_slave_node2 syscfg=NRANGES_ANCHOR=1
-newt target amend nrng_slave_node2 syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=0:UWB_CCP_TOF_COMP_LOCATION_Z=0
-newt run nrng_slave_node2 0.1.0
-
-newt target create nrng_slave_node3
-newt target set nrng_slave_node3 app=apps/twr_nranges_tdma
-newt target set nrng_slave_node3 bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_slave_node3 build_profile=optimized
-newt target amend nrng_slave_node3 syscfg=NRANGES_ANCHOR=1
-newt target amend nrng_slave_node3 syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=1:UWB_CCP_TOF_COMP_LOCATION_Z=0
-newt run nrng_slave_node3 0.1.0
-
-
-
-
-newt target amend nrng_slave_node syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=1
 ```
 
 ### Building target for tags
@@ -85,7 +65,7 @@ newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=8:NRNG_NFRAMES=16:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
+newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=16:NRNG_NFRAMES=32:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
 #newt target amend nrng_tag syscfg=DW1000_SYS_STATUS_BACKTRACE_LEN=128
 newt run nrng_tag 0.1.0
 
@@ -95,7 +75,7 @@ newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=2:NRNG_NFRAMES=4:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=2
+newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=2:NRNG_NFRAMES=4:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=3
 newt target amend nrng_tag syscfg=NRNG_VERBOSE=1
 newt run nrng_tag 0.1.0
 

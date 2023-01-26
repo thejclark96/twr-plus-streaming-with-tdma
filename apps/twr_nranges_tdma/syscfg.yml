@@ -13,7 +13,7 @@ syscfg.vals:
 
     UWB_DEVICE_0: 1
     FS_XTALT_AUTOTUNE_ENABLED: 0
-    TDMA_NSLOTS: 160
+    TDMA_NSLOTS: 160                 #default is 160
     NRNG_DEVICE_TYPE: 1
     HARDFLOAT: 1
     FLOAT_USER: 1
@@ -75,11 +75,11 @@ syscfg.defs:
     NODE_START_SLOT_ID:
         description: >
             Slot ID from which the nodes should respond
-        value: 0
+        value: 0        # 0 got us continuous ranging
     NODE_END_SLOT_ID:
         description: >
             Slot ID till which the nodes should respond
-        value: 7
+        value: 7        # 7 got us continuous ranging
 
     UWB_CCP_TOF_COMP_LOCATION_X:
         description: 'x-location of this node in relation to the ccp master'
