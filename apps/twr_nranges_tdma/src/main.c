@@ -278,7 +278,7 @@ int main(int argc, char **argv){
     uwbcfg_register(&uwb_cb);
     conf_load();
 
-    hal_gpio_init_out(LED_BLINK_PIN, 1);    // Blue
+    hal_gpio_init_out(LED_BLINK_PIN, 0);    // Blue
     hal_gpio_init_out(LED_1, 1);            // Green
     hal_gpio_init_out(LED_3, 1);            // Red
 
