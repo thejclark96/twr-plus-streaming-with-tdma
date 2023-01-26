@@ -94,7 +94,15 @@ struct uwbcfg_cbs uwb_cb = {                        // This block of code seems 
 The function then has some code inside a preprocessor directive "#ifdef VERBOSE" which is only executed if the preprocessor symbol "VERBOSE" is defined. This code is only there for debugging purposes and prints out various error messages if certain conditions are met.
 The last step in the function is to check if the code of the "frame" variable is equal to either UWB_DATA_CODE_DS_TWR_NRNG_FINAL or UWB_DATA_CODE_DS_TWR_NRNG_EXT_FINAL, if so the code of the frame variable is set to UWB_DATA_CODE_DS_TWR_NRNG_END.
 */
+
+
+/**
+ * @brief 
+ * 
+ * @param ev  
+ */
 static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting Layer
+    struct uwb_dev * inst = uwb_dev_idx_lookup(0);  
     assert(ev != NULL);                             // Checks if event and event argument is NOT NULL
     assert(dpl_event_get_arg(ev) != NULL);
 
@@ -103,7 +111,7 @@ static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting La
     struct nrng_instance * nrng = (struct nrng_instance *) dpl_event_get_arg(ev);
     nrng_frame_t * frame = nrng->frames[(nrng->idx)%nrng->nframes];
 
-#ifdef VERBOSE                                      // If VERBOSE enabled, prints out more info for debugging errors
+// #ifdef VERBOSE                                      // If VERBOSE enabled, prints out more info for debugging errors
     if (inst->status.start_rx_error)
         printf("{\"utime\": %lu,\"timer_ev_cb\": \"start_rx_error\"}\n",os_cputime_ticks_to_usecs(os_cputime_get32()));
     if (inst->status.start_tx_error)
@@ -112,7 +120,7 @@ static void nrng_complete_cb(struct dpl_event *ev) {// DPL = Decawave Porting La
         printf("{\"utime\": %lu,\"timer_ev_cb\":\"rx_error\"}\n",os_cputime_ticks_to_usecs(os_cputime_get32()));
     if (inst->status.rx_timeout_error)
         printf("{\"utime\": %lu,\"timer_ev_cb\":\"rx_timeout_error\"}\n",os_cputime_ticks_to_usecs(os_cputime_get32()));
-#endif
+// #endif
 
     if (frame->code == UWB_DATA_CODE_DS_TWR_NRNG_FINAL || frame->code == UWB_DATA_CODE_DS_TWR_NRNG_EXT_FINAL){
         frame->code = UWB_DATA_CODE_DS_TWR_NRNG_END;// Checks the frame type, if a final frame (either extended type or regular), frame type is changed to END type. Looks like it ony applies is double sided (DS) twr is enabled
@@ -177,9 +185,7 @@ static void slot_cb(struct dpl_event * ev){     // ev = os_event = dpl_event (dp
     if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return; // If ccp's epoch==0 AND slot ID is all 1s, return
 
     /* Process any newtmgr packages queued up */
-    if (idx > 6 && idx < (tdma->nslots-6) && (idx%4)==0) {      // if tdma slot # is greater than 6 AND
-                                                                // less than the (total slots - 6) AND divisible by 4:
-
+    if (idx > 6 && idx < (tdma->nslots-6) && (idx%4)==0) {      // if tdma slot # is greater than 6 AND less than the (total slots - 6) AND divisible by 4:
         nmgr_uwb_instance_t *nmgruwb = (nmgr_uwb_instance_t *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NMGR_UWB);
                                                                 // Likely used to find a specific callback instance pointer which is likely related to the newtmgr package queued up
 
