@@ -22,7 +22,7 @@ syscfg.defs:
         value: 32     # 32 got us continuous ranging
       NRNG_NTAGS:
         description: 'Max number of tags to allow in slots'
-        value: 1      # 4 got us continous ranging
+        value: 1      # 4 got us continous ranging, changed to 2 to test out streaming with concurrent nrng
       NRNG_VERBOSE:
         description: 'Show debug output from postprocess'
         value: 1

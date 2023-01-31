@@ -64,23 +64,7 @@
 #define DIAGMSG(s,u)
 #endif
 
-int this_tdma_slot;      // Global var for the current tdma slot (for printing)
-
 uint8_t test[512 - sizeof(uwb_transport_frame_header_t) - 2];
-
-
-/**
- * @brief String to be sent via UWB
- * 
- */
-char payload[32 - sizeof(uwb_transport_frame_header_t) - 1];
-
-/**
- * @brief String to recieve data
- * 
- */
-char reciever[32 - sizeof(uwb_transport_frame_header_t) - 1];
-
 
 #if MYNEWT_VAL(UWBCFG_ENABLED)
 static bool uwb_config_updated = false;
@@ -129,7 +113,7 @@ range_slot_cb(struct dpl_event * ev){
         return;
     }
 
-    if ->local_epoch==0 || udev->slot_id == 0xffff) return;
+    if (ccp->local_epoch==0 || udev->slot_id == 0xffff) return;
 
     if (udev->role&UWB_ROLE_ANCHOR) {
         /* Listen for a ranging tag */
@@ -222,47 +206,35 @@ stream_slot_cb(struct dpl_event * ev)
     }
 }
 
-// static uint8_t g_idx = 0;
-// static uint32_t g_missed_count = 0;
-// static uint32_t g_ok_count = 0;
+static uint8_t g_idx = 0;
+static uint32_t g_missed_count = 0;
+static uint32_t g_ok_count = 0;
 static bool
 uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
 {
     uint16_t len = DPL_MBUF_PKTLEN(mbuf);
-    dpl_mbuf_copydata(mbuf, 0, sizeof(reciever), reciever);
+    dpl_mbuf_copydata(mbuf, 0, sizeof(test), test);
     dpl_mbuf_free_chain(mbuf);
-    // g_idx++;
-
-
+    g_idx++;
     /* First byte stores crc */
-    uint8_t crc = (uint8_t) (reciever[0]); 
-
-    // since I am sending string data here the string won't always be the length of the reciever buffer
-        // later I will worry about variable length packets
-    if (crc != crc8_calc(0, reciever+1, sizeof(reciever)-1) || len != sizeof(reciever))
-    {
+    if (test[0] != crc8_calc(0, test+1, sizeof(test)-1) || len != sizeof(test)){
         uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-        printf("{\"utime\": %lu,\"error\": \" crc mismatch len=%d, sizeof(test) = %d\"}\n",utime, len, sizeof(reciever));
-    }
-    // } else if (test[1] != g_idx) {
-    //     /* Second byte stores an index */
-    //     uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-    //     g_ok_count++;
-    //     g_missed_count += (test[1] - g_idx)&0xff;
-    //     printf("{\"utime\": %lu,\"error\": \" idx mismatch (got %d != expected %d) (missed:%ld, ok:%ld\"}\n",
-    //            utime, test[1], g_idx, g_missed_count, g_ok_count);
-    // } 
-    else 
-    {
-        // g_ok_count++;
+        printf("{\"utime\": %lu,\"error\": \" crc mismatch len=%d, sizeof(test) = %d\"}\n",utime, len, sizeof(test));
+    } else if (test[1] != g_idx) {
+        /* Second byte stores an index */
         uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-        printf("{\"utime\": %lu , message:%s\"}\n", utime, reciever);
-        printf("{\"This TDMA slot (_/160)\": %lu}\n", this_tdma_slot);
-
-        
+        g_ok_count++;
+        g_missed_count += (test[1] - g_idx)&0xff;
+        printf("{\"utime\": %lu,\"error\": \" idx mismatch (got %d != expected %d) (missed:%ld, ok:%ld\"}\n",
+               utime, test[1], g_idx, g_missed_count, g_ok_count);
+    } else {
+        g_ok_count++;
+        uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
+        printf("{\"utime\": %lu, ok:%ld\"}\n",
+               utime, g_ok_count);
     }
 
-    // g_idx = test[1];
+    g_idx = test[1];
     return true;
 }
 
@@ -271,35 +243,27 @@ static struct dpl_callout stream_callout;
 static void
 stream_timer(struct dpl_event *ev)
 {
-    // dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
-
-    // Change timer frequency to 1 Hz
-    dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC);
+    dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
 
     uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
     struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
 
-    for (uint8_t i = 0; i < 18; i++)
-    {
+    for (uint8_t i = 0; i < 18; i++){
         uint16_t destination_uid = ccp->frames[0]->short_address;
         if (!destination_uid) break;
         struct dpl_mbuf * mbuf;
-        if (uwb_transport->config.os_msys_mpool)
-        {
-            // Add packet headers to the memory buffer
-            mbuf = dpl_msys_get_pkthdr(sizeof(payload), sizeof(uwb_transport_user_header_t));
+        if (uwb_transport->config.os_msys_mpool){
+            mbuf = dpl_msys_get_pkthdr(sizeof(test), sizeof(uwb_transport_user_header_t));
         }
-        else
-        {
+        else{
             mbuf = dpl_mbuf_get_pkthdr(uwb_transport->omp, sizeof(uwb_transport_user_header_t));
         }
-        if (mbuf)
-        {
-            // /* Second byte stores an index */
-            // test[1]++;
+        if (mbuf){
+            /* Second byte stores an index */
+            test[1]++;
             /* First byte stores crc */
-            payload[0] = crc8_calc(0, payload+1, sizeof(payload)-1);
-            dpl_mbuf_copyinto(mbuf, 0, payload, sizeof(payload));
+            test[0] = crc8_calc(0, test+1, sizeof(test)-1);
+            dpl_mbuf_copyinto(mbuf, 0, test, sizeof(test));
             uwb_transport_enqueue_tx(uwb_transport, destination_uid, 0xDEAD, 8, mbuf);
         }else{
             break;
@@ -310,6 +274,7 @@ stream_timer(struct dpl_event *ev)
 
 
 
+
 int main(int argc, char **argv){
     int rc;
 
@@ -317,26 +282,26 @@ int main(int argc, char **argv){
 
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);
 
-    #if MYNEWT_VAL(USE_DBLBUFFER)
-        /* Make sure to enable double buffring */
-        udev->config.dblbuffon_enabled = 1;
-        udev->config.rxauto_enable = 0;
-        uwb_set_dblrxbuff(udev, true);
-    #else
-        udev->config.dblbuffon_enabled = 0;
-        udev->config.rxauto_enable = 1;
-        uwb_set_dblrxbuff(udev, false);
-    #endif
+#if MYNEWT_VAL(USE_DBLBUFFER)
+    /* Make sure to enable double buffring */
+    udev->config.dblbuffon_enabled = 1;
+    udev->config.rxauto_enable = 0;
+    uwb_set_dblrxbuff(udev, true);
+#else
+    udev->config.dblbuffon_enabled = 0;
+    udev->config.rxauto_enable = 1;
+    uwb_set_dblrxbuff(udev, false);
+#endif
 
-    #if MYNEWT_VAL(UWBCFG_ENABLED)
-        /* Register callback for UWB configuration changes */
-        struct uwbcfg_cbs uwb_cb = {
-            .uc_update = uwb_config_updated_func
-        };
-        uwbcfg_register(&uwb_cb);
-        /* Load config from flash */
-        conf_load();
-    #endif
+#if MYNEWT_VAL(UWBCFG_ENABLED)
+    /* Register callback for UWB configuration changes */
+    struct uwbcfg_cbs uwb_cb = {
+        .uc_update = uwb_config_updated_func
+    };
+    uwbcfg_register(&uwb_cb);
+    /* Load config from flash */
+    conf_load();
+#endif
 
     hal_gpio_init_out(LED_BLINK_PIN, 1);
     hal_gpio_init_out(LED_1, 1);
@@ -362,15 +327,15 @@ int main(int argc, char **argv){
         uwb_ccp_start(ccp, CCP_ROLE_SLAVE);
     }
 
-    #if MYNEWT_VAL(BLE_ENABLED)
-        ble_init(udev->euid);
-    #endif
+#if MYNEWT_VAL(BLE_ENABLED)
+    ble_init(udev->euid);
+#endif
 
-    #if MYNEWT_VAL(DW1000_DEVICE_0)
-        // Using GPIO5 and GPIO6 to study timing.
-        dw1000_gpio5_config_ext_txe( hal_dw1000_inst(0));
-        dw1000_gpio6_config_ext_rxe( hal_dw1000_inst(0));
-    #endif
+#if MYNEWT_VAL(DW1000_DEVICE_0)
+    // Using GPIO5 and GPIO6 to study timing.
+    dw1000_gpio5_config_ext_txe( hal_dw1000_inst(0));
+    dw1000_gpio6_config_ext_rxe( hal_dw1000_inst(0));
+#endif
 
     uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
     printf("{\"utime\": %lu,\"exec\": \"%s\"}\n",utime,__FILE__);
@@ -386,34 +351,28 @@ int main(int argc, char **argv){
     tdma_instance_t * tdma = (tdma_instance_t*)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_TDMA);
     assert(tdma);
 
-    #if MYNEWT_VAL(CONCURRENT_NRNG)
-        struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
-        assert(nrng);
-        /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging */
-        for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-            if(i%16)
-                tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
-            else
-                tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
-        }
-    #else
-    /* Slot 0:ccp, 1-160 stream */
-        for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-                tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);   //(pointer to tdma instance, CB for the particular slot, slot number, CB arg)
-                
-        }
-    #endif
+#if MYNEWT_VAL(CONCURRENT_NRNG)
+    struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
+    assert(nrng);
+    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging */
+    for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
+        if(i%16)
+            tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
+        else
+            tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
+    }
+#else
+/* Slot 0:ccp, 1-160 stream */
+    for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
+            tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
+#endif
 
-
-    char* message = "UWB Test";
-    for (uint16_t i=1; i < sizeof(payload); i++)
-        payload[i] = message[i-1];
-
-
-    #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1     // TX role
-        dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
-        dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
-    #endif
+    for (uint16_t i=0; i < sizeof(test); i++)
+        test[i] = i;
+#if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
+    dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
+    dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
+#endif
 
     while (1) {
         dpl_eventq_run(dpl_eventq_dflt_get());
