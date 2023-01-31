@@ -13,7 +13,11 @@ syscfg.vals:
 
     UWB_DEVICE_0: 1
     FS_XTALT_AUTOTUNE_ENABLED: 0
+<<<<<<< HEAD
     TDMA_NSLOTS: 160                 #default is 160
+=======
+    TDMA_NSLOTS: 20 #default is 160
+>>>>>>> 1542210a26333805608c2165a5e8e5e204e4c5b6
     NRNG_DEVICE_TYPE: 1
     HARDFLOAT: 1
     FLOAT_USER: 1
