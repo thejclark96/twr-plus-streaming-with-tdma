@@ -27,6 +27,9 @@
 
 #if MYNEWT_VAL(NRNG_VERBOSE)
 
+// Value created to store the range data into so it can be accessed in apps/UltraWideBuffs_DataTransfer/src/main.c
+int TX_Data;
+
 void
 nrng_encode(struct nrng_instance * nrng, uint8_t seq_num, uint16_t base){
 
@@ -67,6 +70,9 @@ nrng_encode(struct nrng_instance * nrng, uint8_t seq_num, uint16_t base){
 
     nrng_json_write(&json);
     printf("%s\n",json.iobuf);
+
+    TX_Data = json.iobuf;
+    // printf("%s\n",TX_Data);      test to see if the json data can be written to a variable and printed out in the same format. ItWORKS!!
 }
 
 #endif

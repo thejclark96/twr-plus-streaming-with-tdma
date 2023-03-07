@@ -66,6 +66,20 @@
 
 uint8_t test[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
+
+/**
+ * @brief String to be sent via UWB
+ * 
+ */
+char payload[32 - sizeof(uwb_transport_frame_header_t) - 1];
+
+/**
+ * @brief String to recieve data
+ * 
+ */
+char reciever[32 - sizeof(uwb_transport_frame_header_t) - 1];
+
+
 #if MYNEWT_VAL(UWBCFG_ENABLED)
 static bool uwb_config_updated = false;
 
@@ -206,35 +220,45 @@ stream_slot_cb(struct dpl_event * ev)
     }
 }
 
-static uint8_t g_idx = 0;
-static uint32_t g_missed_count = 0;
-static uint32_t g_ok_count = 0;
+// static uint8_t g_idx = 0;
+// static uint32_t g_missed_count = 0;
+// static uint32_t g_ok_count = 0;
 static bool
 uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
 {
     uint16_t len = DPL_MBUF_PKTLEN(mbuf);
-    dpl_mbuf_copydata(mbuf, 0, sizeof(test), test);
+    dpl_mbuf_copydata(mbuf, 0, sizeof(reciever), reciever);
     dpl_mbuf_free_chain(mbuf);
-    g_idx++;
+    // g_idx++;
+
+
     /* First byte stores crc */
-    if (test[0] != crc8_calc(0, test+1, sizeof(test)-1) || len != sizeof(test)){
+    uint8_t crc = (uint8_t) (reciever[0]); 
+
+    // since I am sending string data here the string won't always be the length of the reciever buffer
+        // later I will worry about variable length packets
+    if (crc != crc8_calc(0, reciever+1, sizeof(reciever)-1) || len != sizeof(reciever))
+    {
         uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-        printf("{\"utime\": %lu,\"error\": \" crc mismatch len=%d, sizeof(test) = %d\"}\n",utime, len, sizeof(test));
-    } else if (test[1] != g_idx) {
-        /* Second byte stores an index */
+        printf("{\"utime\": %lu,\"error\": \" crc mismatch len=%d, sizeof(test) = %d\"}\n",utime, len, sizeof(reciever));
+    }
+    // } else if (test[1] != g_idx) {
+    //     /* Second byte stores an index */
+    //     uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
+    //     g_ok_count++;
+    //     g_missed_count += (test[1] - g_idx)&0xff;
+    //     printf("{\"utime\": %lu,\"error\": \" idx mismatch (got %d != expected %d) (missed:%ld, ok:%ld\"}\n",
+    //            utime, test[1], g_idx, g_missed_count, g_ok_count);
+    // } 
+    else 
+    {
+        // g_ok_count++;
         uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-        g_ok_count++;
-        g_missed_count += (test[1] - g_idx)&0xff;
-        printf("{\"utime\": %lu,\"error\": \" idx mismatch (got %d != expected %d) (missed:%ld, ok:%ld\"}\n",
-               utime, test[1], g_idx, g_missed_count, g_ok_count);
-    } else {
-        g_ok_count++;
-        uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
-        printf("{\"utime\": %lu, ok:%ld\"}\n",
-               utime, g_ok_count);
+        printf("{\"utime\": %lu , message:%s\"}\n",
+               utime, reciever);
     }
 
-    g_idx = test[1];
+    // g_idx = test[1];
     return true;
 }
 
@@ -243,27 +267,35 @@ static struct dpl_callout stream_callout;
 static void
 stream_timer(struct dpl_event *ev)
 {
-    dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
+    // dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
+
+    // Change timer frequency to 1 Hz
+    dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC);
 
     uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
     struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
 
-    for (uint8_t i = 0; i < 18; i++){
+    for (uint8_t i = 0; i < 18; i++)
+    {
         uint16_t destination_uid = ccp->frames[0]->short_address;
         if (!destination_uid) break;
         struct dpl_mbuf * mbuf;
-        if (uwb_transport->config.os_msys_mpool){
-            mbuf = dpl_msys_get_pkthdr(sizeof(test), sizeof(uwb_transport_user_header_t));
+        if (uwb_transport->config.os_msys_mpool)
+        {
+            // Add packet headers to the memory buffer
+            mbuf = dpl_msys_get_pkthdr(sizeof(payload), sizeof(uwb_transport_user_header_t));
         }
-        else{
+        else
+        {
             mbuf = dpl_mbuf_get_pkthdr(uwb_transport->omp, sizeof(uwb_transport_user_header_t));
         }
-        if (mbuf){
-            /* Second byte stores an index */
-            test[1]++;
+        if (mbuf)
+        {
+            // /* Second byte stores an index */
+            // test[1]++;
             /* First byte stores crc */
-            test[0] = crc8_calc(0, test+1, sizeof(test)-1);
-            dpl_mbuf_copyinto(mbuf, 0, test, sizeof(test));
+            payload[0] = crc8_calc(0, payload+1, sizeof(payload)-1);
+            dpl_mbuf_copyinto(mbuf, 0, payload, sizeof(payload));
             uwb_transport_enqueue_tx(uwb_transport, destination_uid, 0xDEAD, 8, mbuf);
         }else{
             break;
@@ -354,9 +386,9 @@ int main(int argc, char **argv){
 #if MYNEWT_VAL(CONCURRENT_NRNG)
     struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
     assert(nrng);
-    /* Slot 0:ccp, 1-160 stream but every 32nd slot used for ranging */
+    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging */
     for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-        if(i%32)
+        if(i%16)
             tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
         else
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
@@ -367,8 +399,11 @@ int main(int argc, char **argv){
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
 #endif
 
-    for (uint16_t i=0; i < sizeof(test); i++)
-        test[i] = i;
+    char* message = "UWB Test";
+
+    for (uint16_t i=1; i < sizeof(payload); i++)
+        payload[i] = message[i-1];
+
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
     dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
