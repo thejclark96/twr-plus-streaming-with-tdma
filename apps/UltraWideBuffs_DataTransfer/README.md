@@ -35,26 +35,44 @@ In this example the tx_stream streams transmits a buffer at 3.9Mbps to the rx_st
 
 ```no-highlight
 
-newt target create tx_stream
-newt target set tx_stream app=apps/streaming
-newt target set tx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set tx_stream build_profile=debug
-# Uncomment next line to use uart instead of rtt console
-#newt target amend tx_stream syscfg=CONSOLE_UART_BAUD=460800:CONSOLE_UART=1:CONSOLE_RTT=0
-newt target amend tx_stream syscfg=UWB_TRANSPORT_ROLE=1:OS_LATENCY=1000:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128
-newt run tx_stream 0
+###################### Streaming Device (TAG) ######################
 
-#newt target set tx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1002
-#newt run tx_stream 0
+#--- TX Without Ranging ---#
+newt target create  tx_stream
+newt target set     tx_stream app=apps/UltraWideBuffs_DataTransfer 
+newt target set     tx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set     tx_stream build_profile=debug
+newt target amend   tx_stream syscfg=UWB_TRANSPORT_ROLE=1:OS_LATENCY=1000:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=0
+newt run            tx_stream 0
 
-newt target create rx_stream
-newt target set rx_stream app=apps/streaming
-newt target set rx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set rx_stream build_profile=debug
-# Uncomment next line to use uart instead of rtt console
-#newt target amend rx_stream syscfg=CONSOLE_UART_BAUD=460800:CONSOLE_UART=1:CONSOLE_RTT=0
-newt target amend rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=0:CONSOLE_RTT=1:DW1000_SYS_STATUS_BACKTRACE_LEN=128
-newt run rx_stream 0
+#--- TX WITH Ranging ---#
+newt target create  tx_stream
+newt target set     tx_stream app=apps/UltraWideBuffs_DataTransfer 
+newt target set     tx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set     tx_stream build_profile=debug
+newt target amend   tx_stream syscfg=UWB_TRANSPORT_ROLE=1:OS_LATENCY=1000:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
+newt run            tx_stream 0
+
+
+
+
+###################### Receiving Device  (GATEWAY) ######################
+
+#--- RX Without Ranging ---#
+newt target create  rx_stream
+newt target set     rx_stream app=apps/UltraWideBuffs_DataTransfer 
+newt target set     rx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set     rx_stream build_profile=debug
+newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=0
+newt run            rx_stream 0
+
+#--- RX WITH Ranging ---#
+newt target create  rx_stream
+newt target set     rx_stream app=apps/UltraWideBuffs_DataTransfer 
+newt target set     rx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set     rx_stream build_profile=debug
+newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
+newt run            rx_stream 0
 
 ```
 

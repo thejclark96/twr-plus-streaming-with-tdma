@@ -17,7 +17,7 @@
 # under the License.
 #
 
-pkg.name: apps/streaming
+pkg.name: apps/UltraWideBuffs_DataTransfer
 pkg.type: app
 pkg.description: "Basic reverse superres anchor node"
 pkg.author: "UWB Core <uwbcore@gmail.com>"
