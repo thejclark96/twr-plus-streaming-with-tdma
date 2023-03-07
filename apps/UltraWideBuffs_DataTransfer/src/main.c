@@ -159,6 +159,9 @@ range_slot_cb(struct dpl_event * ev){
             printf("{\"utime\": %lu,\"msg\": \"slot_timer_cb_%d:start_tx_error\"}\n",
                    utime,idx);
         }
+                extern int TX_Data;
+        // printf("TEST\n");
+        // printf("%s\n\n\n",TX_Data);
     }
 }
 #endif
