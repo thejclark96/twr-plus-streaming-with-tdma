@@ -39,7 +39,7 @@ nrng_encode(struct nrng_instance * nrng, uint8_t seq_num, uint16_t base){
         .uid = frame->src_address
     };
     // Workout which slots responded with a valid frames
-    for (uint16_t i=0; i < 16; i++){
+    for (uint16_t i=0; i < 160; i++){
         if (nrng->slot_mask & 1UL << i){
             uint16_t idx = BitIndex(nrng->slot_mask, 1UL << i, SLOT_POSITION);
             nrng_frame_t * frame = nrng->frames[(base + idx)%nrng->nframes];
