@@ -53,7 +53,7 @@ newt target set rx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set rx_stream build_profile=debug
 # Uncomment next line to use uart instead of rtt console
 #newt target amend rx_stream syscfg=CONSOLE_UART_BAUD=460800:CONSOLE_UART=1:CONSOLE_RTT=0
-newt target amend rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128
+newt target amend rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=0:CONSOLE_RTT=1:DW1000_SYS_STATUS_BACKTRACE_LEN=128
 newt run rx_stream 0
 
 ```
