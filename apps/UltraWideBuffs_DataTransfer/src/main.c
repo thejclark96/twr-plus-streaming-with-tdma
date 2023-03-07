@@ -354,9 +354,9 @@ int main(int argc, char **argv){
 #if MYNEWT_VAL(CONCURRENT_NRNG)
     struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
     assert(nrng);
-    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging */
+    /* Slot 0:ccp, 1-160 stream but every 32nd slot used for ranging */
     for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-        if(i%16)
+        if(i%32)
             tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
         else
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
