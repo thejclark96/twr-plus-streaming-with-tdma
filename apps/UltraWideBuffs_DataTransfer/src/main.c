@@ -71,13 +71,18 @@ uint8_t test[512 - sizeof(uwb_transport_frame_header_t) - 2];
  * @brief String to be sent via UWB
  * 
  */
-char payload[32 - sizeof(uwb_transport_frame_header_t) - 1];
+// char payload[32 - sizeof(uwb_transport_frame_header_t) - 1];
+uint8_t payload[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
 /**
  * @brief String to recieve data
  * 
  */
-char reciever[32 - sizeof(uwb_transport_frame_header_t) - 1];
+// char reciever[32 - sizeof(uwb_transport_frame_header_t) - 1];
+uint8_t reciever[512 - sizeof(uwb_transport_frame_header_t) - 2];
+
+
+extern char* TX_Data;   // Var for range data from nrng_encode.c
 
 
 #if MYNEWT_VAL(UWBCFG_ENABLED)
@@ -159,7 +164,7 @@ range_slot_cb(struct dpl_event * ev){
             printf("{\"utime\": %lu,\"msg\": \"slot_timer_cb_%d:start_tx_error\"}\n",
                    utime,idx);
         }
-                extern int TX_Data;
+        extern char* TX_Data;
         // printf("TEST\n");
         // printf("%s\n\n\n",TX_Data);
     }
@@ -389,9 +394,9 @@ int main(int argc, char **argv){
 #if MYNEWT_VAL(CONCURRENT_NRNG)
     struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
     assert(nrng);
-    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging */
+    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging (SWITCHED TO EVERY 32nd SLOT TO DECREASE FREQUENCY */
     for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-        if(i%16)
+        if(i%32)
             tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
         else
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
@@ -402,7 +407,12 @@ int main(int argc, char **argv){
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
 #endif
 
-    char* message = "UWB Test";
+    // char* message = "UWB Test";
+    char* message = "{"utime": 14450645,"seq": 186,"uid": 54541,"ouid": [51749],"rng": [2.896]}";
+
+
+    printf("%s\n\n\n\n",TX_Data);       // This is a test to see if I can print the location data from nrng_encode.c, here in main.c. Tis a success!
+    // message = TX_Data;
 
     for (uint16_t i=1; i < sizeof(payload); i++)
         payload[i] = message[i-1];
