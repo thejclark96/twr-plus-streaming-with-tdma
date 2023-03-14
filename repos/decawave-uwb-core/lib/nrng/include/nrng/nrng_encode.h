@@ -17,6 +17,8 @@
  * under the License.
  */
 
+#pragma once
+
 #ifndef _NRNG_ENCODE_H_
 #define _NRNG_ENCODE_H_
 
@@ -29,6 +31,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Value created to store the range data into so it can be accessed in apps/UltraWideBuffs_DataTransfer/src/main.c
+extern char* TX_Data;
+
 
 void nrng_encode(struct nrng_instance * nrng, uint8_t seq_num, uint16_t base);
 

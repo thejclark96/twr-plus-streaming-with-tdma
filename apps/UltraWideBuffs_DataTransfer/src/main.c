@@ -55,9 +55,15 @@
 #endif
 #if MYNEWT_VAL(CONCURRENT_NRNG)
 #include <nrng/nrng.h>
+
 #endif
 
+#include <nrng/nrng_encode.h>
 #include <crc/crc8.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 //#define DIAGMSG(s,u) printf(s,u)
 #ifndef DIAGMSG
@@ -82,7 +88,7 @@ uint8_t payload[512 - sizeof(uwb_transport_frame_header_t) - 2];
 uint8_t reciever[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
 
-extern char* TX_Data;   // Var for range data from nrng_encode.c
+// extern char* TX_Data;   // Var for range data from nrng_encode.c
 
 
 #if MYNEWT_VAL(UWBCFG_ENABLED)
@@ -231,10 +237,27 @@ stream_slot_cb(struct dpl_event * ev)
 // static uint8_t g_idx = 0;
 // static uint32_t g_missed_count = 0;
 // static uint32_t g_ok_count = 0;
+
+
+/**
+ * @brief Reciever Callback Function
+ * 
+ * @param inst 
+ * @param uid 
+ * @param mbuf 
+ * @return true 
+ * @return false 
+ */
 static bool
 uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
 {
+
+    // get the length of the data in the memory buffer
     uint16_t len = DPL_MBUF_PKTLEN(mbuf);
+
+    // char receiver[len];
+
+    // copy data from the memory buffer to our local variable
     dpl_mbuf_copydata(mbuf, 0, sizeof(reciever), reciever);
     dpl_mbuf_free_chain(mbuf);
     // g_idx++;
@@ -264,6 +287,8 @@ uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
         uint32_t utime = os_cputime_ticks_to_usecs(os_cputime_get32());
         printf("{\"utime\": %lu , message:%s\"}\n",
                utime, reciever);
+
+        
     }
 
     // g_idx = test[1];
@@ -272,10 +297,18 @@ uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
 
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
 static struct dpl_callout stream_callout;
+
+/**
+ * @brief Trransmit function
+ * 
+ * @param ev [-] event structure
+ */
 static void
 stream_timer(struct dpl_event *ev)
 {
     // dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
+    for (uint16_t i=1; i < sizeof(TX_Data); i++)
+        payload[i] = TX_Data[i-1];
 
     // Change timer frequency to 1 Hz
     dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC);
@@ -319,6 +352,9 @@ int main(int argc, char **argv){
     int rc;
 
     sysinit();
+
+    // initialize the memory size
+    TX_Data = (char *) malloc(512 * sizeof(char));
 
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);
 
@@ -408,14 +444,33 @@ int main(int argc, char **argv){
 #endif
 
     // char* message = "UWB Test";
-    char* message = "{"utime": 14450645,"seq": 186,"uid": 54541,"ouid": [51749],"rng": [2.896]}";
+    // char* message = "{\"utime\": 14450645,\"seq\": 186,\"uid\": 54541,\"ouid\": [51749],\"rng\": [2.896]}";
+    // char* *message = "{"utime": 14450645,"seq": 186,"uid": 54541,"ouid": [51749],"rng": [2.896]}"};
+    char* message = TX_Data;
+    
+    // char* str = TX_Data;
+    // int len = strlen(str);
+    // char* new_str = (char*) malloc(len + 1);
+    // if (new_str == NULL) {
+    //     printf("Memory allocation failed\n");
+    //     exit(1);
+    // }
+    // int j = 0;
+    // for (int i = 0; i < len; i++) {
+    //     if (str[i] != '"') {
+    //         new_str[j++] = str[i];
+    //     }
+    // }
+    // new_str[j] = '\0';
 
-
-    printf("%s\n\n\n\n",TX_Data);       // This is a test to see if I can print the location data from nrng_encode.c, here in main.c. Tis a success!
     // message = TX_Data;
 
-    for (uint16_t i=1; i < sizeof(payload); i++)
-        payload[i] = message[i-1];
+
+    // printf("%s\n\n\n\n",message);
+
+    // printf("%s\n\n\n\n",TX_Data);       // This is a test to see if I can print the location data from nrng_encode.c, here in main.c. Tis a success!
+
+    
 
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
