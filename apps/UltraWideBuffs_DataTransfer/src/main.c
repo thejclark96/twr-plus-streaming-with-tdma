@@ -307,7 +307,7 @@ static void
 stream_timer(struct dpl_event *ev)
 {
     // dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
-    for (uint16_t i=1; i < sizeof(TX_Data); i++)
+    for (uint16_t i=1; i < 512 - 1; i++)        // Need to add macro for 512, name it def size or something
         payload[i] = TX_Data[i-1];
 
     // Change timer frequency to 1 Hz
@@ -430,16 +430,16 @@ int main(int argc, char **argv){
 #if MYNEWT_VAL(CONCURRENT_NRNG)
     struct nrng_instance * nrng = (struct nrng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_NRNG);
     assert(nrng);
-    /* Slot 0:ccp, 1-160 stream but every 16th slot used for ranging (SWITCHED TO EVERY 32nd SLOT TO DECREASE FREQUENCY */
-    for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-        if(i%32)
+    /* Slot 0:ccp, Slot 1+2:PAN , the rest of the slots we play around with */
+    for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
+        if( (i%5) != 0 )
             tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
         else
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
     }
 #else
 /* Slot 0:ccp, 1-160 stream */
-    for (uint16_t i = 1; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
+    for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
 #endif
 

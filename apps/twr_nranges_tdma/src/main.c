@@ -333,16 +333,16 @@ int main(int argc, char **argv)
     struct uwb_rng_instance *rng = (struct uwb_rng_instance *)uwb_mac_find_cb_inst_ptr(udev, UWBEXT_RNG);
     assert(rng);
 
-    if (udev->role & UWB_ROLE_CCP_MASTER)
-    {                               // If device is master node (anchor), it starts as the ccp clock master
-        /* Start as clock-master */ // API to start clock calibration packets (CCP) blinks with a pulse repetition period of MYNEWT_VAL(UWB_CCP_PERIOD).
-        uwb_ccp_start(ccp, CCP_ROLE_MASTER);
-    }
-    else
-    {
+    // if (udev->role & UWB_ROLE_CCP_MASTER)
+    // {                               // If device is master node (anchor), it starts as the ccp clock master
+    //     /* Start as clock-master */ // API to start clock calibration packets (CCP) blinks with a pulse repetition period of MYNEWT_VAL(UWB_CCP_PERIOD).
+    //     uwb_ccp_start(ccp, CCP_ROLE_MASTER);
+    // }
+    // else
+    // {
         uwb_ccp_start(ccp, CCP_ROLE_SLAVE);        // If slave anchor or tag, start as clock slave
         uwb_ccp_set_tof_comp_cb(ccp, tof_comp_cb); // Sets the CB that estimate the tof in dw units to the node with euid provided as paramater. Used to compensate for the tof from the clock source
-    }
+    // }
 
     if (udev->role & UWB_ROLE_PAN_MASTER)
     {
