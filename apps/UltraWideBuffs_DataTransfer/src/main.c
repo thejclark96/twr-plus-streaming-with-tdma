@@ -432,10 +432,14 @@ int main(int argc, char **argv){
     assert(nrng);
     /* Slot 0:ccp, Slot 1+2:PAN , the rest of the slots we play around with */
     for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
-        if( (i%5) != 0 )
-            tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
-        else
+        if( (i%20 != 0 ) )
+            // tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
             tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
+
+        else 
+            // tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
+            tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
+
     }
 #else
 /* Slot 0:ccp, 1-160 stream */
