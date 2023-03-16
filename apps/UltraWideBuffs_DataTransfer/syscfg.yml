@@ -6,6 +6,9 @@ syscfg.vals:
     CONSOLE_RTT: 1
     CONSOLE_HISTORY_SIZE: 8
 
+    # Enable I2C 1
+    I2C_1 : 1
+
     UWB_DEVICE_0: 1
     FS_XTALT_AUTOTUNE_ENABLED: 0
     HARDFLOAT: 1
