@@ -10,7 +10,7 @@ syscfg.vals:
     FS_XTALT_AUTOTUNE_ENABLED: 0
     HARDFLOAT: 1
     FLOAT_USER: 1
-    TDMA_NSLOTS: 160        # default = 16
+    TDMA_NSLOTS: 160
     RNG_VERBOSE: 2
     CIR_VERBOSE: 0
     UWB_CCP_VERBOSE: 0

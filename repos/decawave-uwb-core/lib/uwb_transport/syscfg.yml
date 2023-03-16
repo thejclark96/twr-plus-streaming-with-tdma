@@ -20,7 +20,7 @@ syscfg.defs:
         value: 2000
     UWB_TRANSPORT_STATS:
         description: 'Enable stat'
-        value: 0
+        value: 1        # default = 0
     UWB_TRANSPORT_STATS_BITRATE:
         description: 'Enable bitrate stat'
         value: 0

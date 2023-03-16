@@ -11,7 +11,7 @@ syscfg.defs:
         value: ((uint16_t)0x20)
       RNG_VERBOSE:
         description: 'Show debug output from postprocess'
-        value: 0
+        value: 2    # default = 0
       RNG_STATS:
         description: 'Enable statistics for the rng module'
         value: 1

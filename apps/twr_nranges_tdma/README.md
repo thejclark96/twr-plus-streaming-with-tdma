@@ -5,6 +5,37 @@ This example demonstrates the nrng use case--n ranges measurements with n+2 fram
 
 The example also illustrates the WCS (Wireless Clock Synchronization) capability, here the TOA (Time Of Arrival) timestamps are reported in master clock (node0) reference frame.
 
+4. To erase the default flash image that shipped with the DWM1001.
+
+```no-highlight
+$ JLinkExe -device nRF52 -speed 4000 -if SWD
+J-Link>erase
+J-Link>exit
+$
+```
+
+or if you have nrfjprog ([Nordic Cmd Tools](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download)) installed:
+
+```
+    $ nrfjprog -f NRF52 -e
+```
+
+
+5. Build the new bootloader applicaiton for the DWM1001 target.
+
+(executed from the mynewt-dw1000-app directory).
+
+```no-highlight
+
+newt target create dwm1001_boot
+newt target set dwm1001_boot app=@mcuboot/boot/mynewt
+newt target set dwm1001_boot bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set dwm1001_boot build_profile=optimized
+newt build dwm1001_boot
+newt load dwm1001_boot
+
+```
+
 ### Building target for (up to) 8 nodes
 
 Master node (only one allowed per network):
@@ -26,26 +57,6 @@ newt target set nrng_slave_node build_profile=debug
 newt target amend nrng_slave_node syscfg=NRANGES_ANCHOR=1
 newt run nrng_slave_node 0.1.0
 
-newt target create nrng_slave_node2
-newt target set nrng_slave_node2 app=apps/twr_nranges_tdma
-newt target set nrng_slave_node2 bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_slave_node2 build_profile=optimized
-newt target amend nrng_slave_node2 syscfg=NRANGES_ANCHOR=1
-newt target amend nrng_slave_node2 syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=0:UWB_CCP_TOF_COMP_LOCATION_Z=0
-newt run nrng_slave_node2 0.1.0
-
-newt target create nrng_slave_node3
-newt target set nrng_slave_node3 app=apps/twr_nranges_tdma
-newt target set nrng_slave_node3 bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_slave_node3 build_profile=optimized
-newt target amend nrng_slave_node3 syscfg=NRANGES_ANCHOR=1
-newt target amend nrng_slave_node3 syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=1:UWB_CCP_TOF_COMP_LOCATION_Z=0
-newt run nrng_slave_node3 0.1.0
-
-
-
-
-newt target amend nrng_slave_node syscfg=UWB_CCP_TOF_COMP_LOCATION_X=1:UWB_CCP_TOF_COMP_LOCATION_Y=1
 ```
 
 ### Building target for tags
@@ -54,47 +65,19 @@ newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=8:NRNG_NFRAMES=16:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
+newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=16:NRNG_NFRAMES=32:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
 #newt target amend nrng_tag syscfg=DW1000_SYS_STATUS_BACKTRACE_LEN=128
 newt run nrng_tag 0.1.0
-
 
 
 ---- New test ----
 newt target create nrng_tag
 newt target set nrng_tag app=apps/twr_nranges_tdma
 newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_tag build_profile=optimized
-newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=3:NRNG_NFRAMES=6:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=5:NRNG_VERBOSE=1
-#newt target amend nrng_tag syscfg=NRNG_DEVICE_TYPE=0
-newt run nrng_tag 0.1.0
-
-
-
-
--- THIS ONE SEEMS TO WORK PRETTY WELL --
-newt target create nrng_tag
-newt target set nrng_tag app=apps/twr_nranges_tdma
-newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=4:NRNG_NFRAMES=8:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=15:NRNG_VERBOSE=1
+newt target amend nrng_tag syscfg=NRNG_NTAGS=1:NRNG_NNODES=16:NRNG_NFRAMES=32:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
+newt target amend nrng_tag syscfg=NRNG_VERBOSE=1
 newt run nrng_tag 0.1.0
-
-
-
-
--- NOT THIS
-<!-- ---Trying out this configuration:---
-newt target create nrng_tag
-newt target set nrng_tag app=apps/twr_nranges_tdma
-newt target set nrng_tag bsp=@decawave-uwb-core/hw/bsp/dwm1001
-newt target set nrng_tag build_profile=debug
-newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=8:NRNG_NFRAMES=16:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
-#newt target amend nrng_tag syscfg=NRNG_NTAGS=4:NRNG_NNODES=3:NRNG_NFRAMES=6:NODE_START_SLOT_ID=0:NODE_END_SLOT_ID=7
-newt target amend nrng_tag syscfg=CONSOLE_RTT=0:CONSOLE_UART=1
-#newt target amend nrng_tag syscfg=NRNG_HUMAN_READABLE_RANGES=1
-#newt target amend nrng_tag syscfg=BLEPRPH_ENABLED=1
-newt run nrng_tag 0.1.0 -->
 
 
 ```

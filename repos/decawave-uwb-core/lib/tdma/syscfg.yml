@@ -7,7 +7,7 @@ syscfg.defs:
         restrictions: OS_LATENCY
     TDMA_NSLOTS:
         description: 'Enable TDMA Services'
-        value: 128
+        value: 160      #This was default 128, why though? 160 got us continous ranging
     TDMA_SANITY_INTERVAL:
         description: 'Sanity watchdog timeout (seconds)'
         value: 0

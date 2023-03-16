@@ -16,16 +16,16 @@ syscfg.defs:
         value: 1
       NRNG_NNODES:
         description: 'Number of nodes to be ranged with'
-        value: 16
+        value: 16     # 16 got us continuous ranging
       NRNG_NFRAMES:
         description: 'Number of frames expected'
-        value: 32
+        value: 32     # 32 got us continuous ranging
       NRNG_NTAGS:
         description: 'Max number of tags to allow in slots'
-        value: 4
+        value: 1      # 4 got us continous ranging, changed to 2 to test out streaming with concurrent nrng
       NRNG_VERBOSE:
         description: 'Show debug output from postprocess'
-        value: 0
+        value: 1
       NRNG_STATS:
         description: 'Enable statistics for the nrng module'
         value: 1

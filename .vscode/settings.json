@@ -5,6 +5,16 @@
         "ble_monitor.h": "c",
         "uwb_mac.h": "c",
         "uwb.h": "c",
-        "mynewt.h": "c"
+        "mynewt.h": "c",
+        "uwb_transport.h": "c",
+        "uwb_rng.h": "c",
+        "uwbcfg.h": "c",
+        "tdma.h": "c",
+        "uwb_ccp.h": "c",
+        "dw1000_gpio.h": "c",
+        "dw1000_hal.h": "c",
+        "crc8.h": "c",
+        "sysinit.h": "c",
+        "os.h": "c"
     }
 }
