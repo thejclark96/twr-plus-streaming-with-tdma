@@ -65,10 +65,10 @@ syscfg.vals:
     MCU_DCDC_ENABLED: 1
 
     UART_0: 0
-    UART_0_PIN_TX: 5
-    UART_0_PIN_RX: 11
+    UART_0_PIN_TX: 27
+    UART_0_PIN_RX: 26
     UART_0_PIN_RTS: -1
-    UART_0_PIN_CTS: 7
+    UART_0_PIN_CTS: -1
 
     SPI_0_MASTER: 0
     SPI_0_MASTER_PIN_SCK: 16
