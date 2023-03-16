@@ -27,6 +27,7 @@
 #include "bsp/bsp.h"
 #include "imgmgr/imgmgr.h"
 #include "hal/hal_gpio.h"
+#include "hal/hal_i2c.h"
 #include "hal/hal_bsp.h"
 #ifdef ARCH_sim
 #include "mcu/mcu_sim.h"
@@ -34,6 +35,11 @@
 #if MYNEWT_VAL(BLE_ENABLED)
 #include "bleprph/bleprph.h"
 #endif
+
+#define I2C_NUM 1
+
+#define TIMEOUT 100
+
 
 #include <uwb/uwb.h>
 #include <uwb/uwb_ftypes.h>
@@ -61,6 +67,11 @@
 #include <nrng/nrng_encode.h>
 #include <crc/crc8.h>
 
+#include "FuelGauge_BQ27441_g1.h"
+#include <dw1000/dw1000_hal.h>
+#include "mcu/nrf52_hal.h"
+#include "mcu/nrf52_periph.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -69,6 +80,18 @@
 #ifndef DIAGMSG
 #define DIAGMSG(s,u)
 #endif
+
+
+// ==============================================================================
+// Fuel Gauge Driver Stuff
+// ==============================================================================
+#define FUEL_GAUGE_SLOT 69
+
+FuelGauge_BQ27441_g1_t fuel_gauge;
+
+FuelGauge_BQ27441_g1_t* fuel_gauge_ptr = &fuel_gauge;
+
+// ===================================================
 
 uint8_t test[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
@@ -88,8 +111,83 @@ uint8_t payload[512 - sizeof(uwb_transport_frame_header_t) - 2];
 uint8_t reciever[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
 
+char * fuel_gauge_string ;
+
 // extern char* TX_Data;   // Var for range data from nrng_encode.c
 
+
+
+
+/**
+ * @brief Write to device over the I2C bus
+ * 
+ * @param addr [-] i2c address of the device being written to
+ * @param len [-] number of bytes being transmitted
+ * @param buf [-] pointer to memory buffer
+ * @param stop_bit [-] if true send a stop bit and end the transmission
+ * @return int [-] Error Code
+ * @todo [-] design - implement better error handling
+ */
+int i2c_write(uint8_t addr, uint16_t len, uint8_t* buf, bool stop_bit)
+{
+    struct hal_i2c_master_data data_packet;
+
+    data_packet.address = addr;
+    data_packet.len = len;
+    data_packet.buffer = buf;
+
+    uint8_t last_op = (stop_bit) ? 1 : 0;
+
+    return hal_i2c_master_write(I2C_NUM, &data_packet, TIMEOUT, last_op);
+
+}
+
+/**
+ * @brief Read from device over the I2C bus
+ * 
+ * @param addr [-] address of the device being read from
+ * @param len [-] bunber of bytes
+ * @param buf [-] pointer to memory buffer
+ * @param stop_bit [-] if true send a stop bit and end the transmission
+ * @return int [-] Error Code
+ * @todo [-] design - implement better error handling
+ */
+int i2c_read(uint8_t addr, uint16_t len, uint8_t* buf, bool stop_bit)
+{
+    struct hal_i2c_master_data data_packet;
+
+    data_packet.address = addr;
+    data_packet.len = len;
+    data_packet.buffer = buf;
+
+    uint8_t last_op = (stop_bit) ? 1 : 0;
+
+    return hal_i2c_master_read(I2C_NUM, &data_packet, TIMEOUT, last_op);
+}
+
+
+/**
+ * @brief Initialize the I2C bus for the specific application
+ * 
+ */
+void initialize_i2c()
+{
+
+   /** I2C controller hardware settings */
+    struct nrf52_hal_i2c_cfg config = {
+        .scl_pin = 8,
+        .sda_pin = 15,
+        .i2c_frequency = 100
+    };
+
+    fuel_gauge.i2c_write_bytes = i2c_write;
+    fuel_gauge.i2c_read_bytes = i2c_read;
+
+    assert (hal_i2c_init(I2C_NUM, &config) == 0);
+
+    assert(hal_i2c_enable(I2C_NUM) == 0);
+
+}
 
 #if MYNEWT_VAL(UWBCFG_ENABLED)
 static bool uwb_config_updated = false;
@@ -295,6 +393,55 @@ uwb_transport_cb(struct uwb_dev * inst, uint16_t uid, struct dpl_mbuf * mbuf)
     return true;
 }
 
+static struct dpl_callout fuel_gauge_callout;
+
+static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
+{
+     uint8_t fg_payload[512 - sizeof(uwb_transport_frame_header_t) - 2];
+
+    dpl_callout_reset(&fuel_gauge_callout, OS_TICKS_PER_SEC);
+
+    volatile uint16_t voltage = get_voltage_mV_BQ27441_g1(fuel_gauge_ptr);
+
+    volatile uint16_t current = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
+
+    sprintf(fuel_gauge_string, "Fuel Gauge Voltage (mV): %d", voltage);
+    // printf("Fuel Gauge Voltage (mV): %d , Fuel Gauge Current (mA): %d", voltage, current);
+
+
+   
+    uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
+    struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
+
+    for (uint8_t i = 0; i < 18; i++)
+    {
+        uint16_t destination_uid = ccp->frames[0]->short_address;
+        if (!destination_uid) break;
+        struct dpl_mbuf * mbuf;
+        if (uwb_transport->config.os_msys_mpool)
+        {
+            // Add packet headers to the memory buffer
+            mbuf = dpl_msys_get_pkthdr(sizeof(payload), sizeof(uwb_transport_user_header_t));
+        }
+        else
+        {
+            mbuf = dpl_mbuf_get_pkthdr(uwb_transport->omp, sizeof(uwb_transport_user_header_t));
+        }
+        if (mbuf)
+        {
+            // /* Second byte stores an index */
+            // test[1]++;
+            /* First byte stores crc */
+            payload[0] = crc8_calc(0, fg_payload+1, sizeof(fg_payload)-1);
+            dpl_mbuf_copyinto(mbuf, 0, fg_payload, sizeof(fg_payload));
+            uwb_transport_enqueue_tx(uwb_transport, destination_uid, 0xDEAD, 8, mbuf);
+        }else{
+            break;
+        }
+    }
+
+}
+
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
 static struct dpl_callout stream_callout;
 
@@ -353,8 +500,19 @@ int main(int argc, char **argv){
 
     sysinit();
 
+
+    
+
+    uint8_t buf[2];
+
+    initialize_i2c();
+
+    // ==============================================================================
+
     // initialize the memory size
     TX_Data = (char *) malloc(512 * sizeof(char));
+
+    fuel_gauge_string = (char *) malloc(512 * sizeof(char));
 
     struct uwb_dev * udev = uwb_dev_idx_lookup(0);
 
@@ -433,13 +591,13 @@ int main(int argc, char **argv){
     /* Slot 0:ccp, Slot 1+2:PAN , the rest of the slots we play around with */
     for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
         if( (i%20 != 0 ) )
-            // tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
-            tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
-
+        {
+            tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport); 
+        }
         else 
             // tdma_assign_slot(tdma, stream_slot_cb,  i, (void*)uwb_transport);
             tdma_assign_slot(tdma, range_slot_cb,  i, (void*)nrng);
-
+        
     }
 #else
 /* Slot 0:ccp, 1-160 stream */
@@ -479,6 +637,11 @@ int main(int argc, char **argv){
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
     dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
+
+
+    dpl_callout_init(&fuel_gauge_callout, dpl_eventq_dflt_get(), fuel_gauge_data_fetch_cb, uwb_transport);
+    dpl_callout_reset(&fuel_gauge_callout, DPL_TICKS_PER_SEC);
+
 #endif
 
     while (1) {
