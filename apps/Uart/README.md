@@ -63,6 +63,8 @@ newt run uart 0
 ```
 
 
+
+
 ### Pull up RTT Console
 `nc localhost 19021`
 
