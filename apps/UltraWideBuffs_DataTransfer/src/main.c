@@ -638,7 +638,7 @@ int main(int argc, char **argv){
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
     dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
 
-
+    // Nick's Battery stuff:            Need to play around with this
     dpl_callout_init(&fuel_gauge_callout, dpl_eventq_dflt_get(), fuel_gauge_data_fetch_cb, uwb_transport);
     dpl_callout_reset(&fuel_gauge_callout, DPL_TICKS_PER_SEC);
 

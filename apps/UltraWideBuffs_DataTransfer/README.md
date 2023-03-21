@@ -74,12 +74,12 @@ newt target set     rx_stream build_profile=debug
 newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
 newt run            rx_stream 0
 
-#--- RX for CUSTOM HARDWARE GATEWAY ---#
+#--- RX  WITH RANGING for CUSTOM HARDWARE GATEWAY ---#
 newt target create  rx_stream
 newt target set     rx_stream app=apps/UltraWideBuffs_DataTransfer 
 newt target set     rx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
 newt target set     rx_stream build_profile=optimized
-newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=0
+newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DBLBUFFER=1:CONSOLE_UART_BAUD=115200:CONSOLE_UART=0:CONSOLE_RTT=1:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
 newt run            rx_stream 0
 
 ```
