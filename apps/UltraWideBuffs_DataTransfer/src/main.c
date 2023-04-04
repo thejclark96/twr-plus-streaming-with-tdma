@@ -93,6 +93,8 @@ FuelGauge_BQ27441_g1_t* fuel_gauge_ptr = &fuel_gauge;
 
 // ===================================================
 
+uint8_t payload_increment = 0;      // Incrementer for switching between streaming ranging data or battery data
+
 uint8_t test[512 - sizeof(uwb_transport_frame_header_t) - 2];
 
 
@@ -406,7 +408,7 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
     volatile uint16_t current = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
 
     sprintf(fuel_gauge_string, "Fuel Gauge Voltage (mV): %d", voltage);
-    // printf("Fuel Gauge Voltage (mV): %d , Fuel Gauge Current (mA): %d", voltage, current);
+    printf("Fuel Gauge Voltage (mV): %d , Fuel Gauge Current (mA): %d \n", voltage, current);
 
 
    
@@ -421,7 +423,7 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
         if (uwb_transport->config.os_msys_mpool)
         {
             // Add packet headers to the memory buffer
-            mbuf = dpl_msys_get_pkthdr(sizeof(payload), sizeof(uwb_transport_user_header_t));
+            mbuf = dpl_msys_get_pkthdr(sizeof(fg_payload), sizeof(uwb_transport_user_header_t));
         }
         else
         {
@@ -432,7 +434,7 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
             // /* Second byte stores an index */
             // test[1]++;
             /* First byte stores crc */
-            payload[0] = crc8_calc(0, fg_payload+1, sizeof(fg_payload)-1);
+            fg_payload[0] = crc8_calc(0, fg_payload+1, sizeof(fg_payload)-1);
             dpl_mbuf_copyinto(mbuf, 0, fg_payload, sizeof(fg_payload));
             uwb_transport_enqueue_tx(uwb_transport, destination_uid, 0xDEAD, 8, mbuf);
         }else{
@@ -454,8 +456,35 @@ static void
 stream_timer(struct dpl_event *ev)
 {
     // dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC/80);
-    for (uint16_t i=1; i < 512 - 1; i++)        // Need to add macro for 512, name it def size or something
-        payload[i] = TX_Data[i-1];
+    // for (uint16_t i=1; i < 512 - 1; i++)        // Need to add macro for 512, name it def size or something
+    //     payload[i] = TX_Data[i-1];
+
+    // for (uint16_t i=1; i < 512 - 1; i++)        // Need to add macro for 512, name it def size or something
+    //     payload[i] = fuel_gauge_string[i-1];
+
+
+    for (payload_increment ; payload_increment < 3; payload_increment++){
+        if          (payload_increment==0){     // Stream ranging data
+            for (uint16_t j=1; j < 512 - 1; j++)        // Need to add macro for 512, name it def size or something
+            payload[j] = TX_Data[j-1];
+            payload_increment++;
+            break;
+
+
+        }else if    (payload_increment==1){     // Stream battery data
+            for (uint16_t j=1; j < 512 - 1; j++)        // Need to add macro for 512, name it def size or something
+            payload[j] = fuel_gauge_string[j-1];
+            payload_increment++;
+            break;
+
+
+        }else{                                  // Reset count
+            payload_increment = 0;
+            break;
+        }
+
+    }
+
 
     // Change timer frequency to 1 Hz
     dpl_callout_reset(&stream_callout, OS_TICKS_PER_SEC);

@@ -61,7 +61,15 @@ newt target set     tx_stream build_profile=optimized
 newt target amend   tx_stream syscfg=UWB_TRANSPORT_ROLE=1:OS_LATENCY=1000:CONSOLE_UART_BAUD=115200:CONSOLE_UART=1:CONSOLE_RTT=0:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
 newt run            tx_stream 0
 
-
+#--- TX WITH Ranging (PERSISTENT HOPEFULLY) ---#
+newt target create  tx_stream
+newt target set     tx_stream app=apps/UltraWideBuffs_DataTransfer 
+newt target set     tx_stream bsp=@decawave-uwb-core/hw/bsp/dwm1001
+newt target set     tx_stream build_profile=optimized
+newt target amend   tx_stream syscfg=UWB_TRANSPORT_ROLE=1:OS_LATENCY=1000:CONSOLE_UART_BAUD=115200:CONSOLE_UART=0:CONSOLE_RTT=1:DW1000_SYS_STATUS_BACKTRACE_LEN=128:CONCURRENT_NRNG=1
+newt build          tx_stream
+newt create-image   tx_stream 1.0.0
+newt load           tx_stream 0
 
 
 ###################### Receiving Device  (GATEWAY) ######################
