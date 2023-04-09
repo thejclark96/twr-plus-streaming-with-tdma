@@ -405,10 +405,14 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
 
     volatile uint16_t voltage = get_voltage_mV_BQ27441_g1(fuel_gauge_ptr);
 
-    volatile uint16_t current = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
+    volatile int16_t current = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
 
-    sprintf(fuel_gauge_string, "Fuel Gauge Voltage (mV): %d", voltage);
-    printf("Fuel Gauge Voltage (mV): %d , Fuel Gauge Current (mA): %d \n", voltage, current);
+    volatile uint16_t state_of_charge = get_state_of_charge_BQ27441_g1(fuel_gauge_ptr);
+
+    // volatile uint16_t state_of_health = get_state_of_health_BQ27441_g1(fuel_gauge_ptr);
+
+    sprintf(fuel_gauge_string, "Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", voltage, current, state_of_charge);
+    printf("Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC (\%): %d\n", voltage, current, state_of_charge);
 
 
    
