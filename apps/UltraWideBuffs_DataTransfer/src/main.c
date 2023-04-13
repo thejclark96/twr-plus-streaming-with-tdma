@@ -116,7 +116,7 @@ uint8_t reciever[512 - sizeof(uwb_transport_frame_header_t) - 2];
 char * fuel_gauge_string ;
 
 // extern char* TX_Data;   // Var for range data from nrng_encode.c
-
+uint32_t my_uid;
 
 
 
@@ -411,8 +411,8 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
 
     // volatile uint16_t state_of_health = get_state_of_health_BQ27441_g1(fuel_gauge_ptr);
 
-    sprintf(fuel_gauge_string, "Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", voltage, current, state_of_charge);
-    printf("Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC (\%): %d\n", voltage, current, state_of_charge);
+    sprintf(fuel_gauge_string, "UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
+    printf("UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
 
 
    
@@ -609,6 +609,7 @@ int main(int argc, char **argv){
     printf("{\"device_id\"=\"%lX\"",udev->device_id);
     printf(",\"panid=\"%X\"",udev->pan_id);
     printf(",\"addr\"=\"%X\"",udev->uid);
+    my_uid = udev->uid;
     printf(",\"part_id\"=\"%lX\"",(uint32_t)(udev->euid&0xffffffff));
     printf(",\"lot_id\"=\"%lX\"}\n",(uint32_t)(udev->euid>>32));
     printf("{\"utime\": %lu,\"msg\": \"frame_duration = %d usec\"}\n",utime,uwb_phy_frame_duration(udev, sizeof(test) + sizeof(uwb_transport_frame_header_t)));
