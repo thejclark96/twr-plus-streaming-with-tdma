@@ -99,4 +99,5 @@ newt target amend   rx_stream syscfg=UWB_TRANSPORT_ROLE=0:OS_LATENCY=1000:USE_DB
 newt run            rx_stream 0
 
 ```
-
+### Pull up RTT Console
+`nc localhost 19021`
