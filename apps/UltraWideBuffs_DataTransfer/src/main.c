@@ -549,7 +549,7 @@ char * uart_string ;
 static struct uart_buffer
 {
     char byte;
-    char mem_buf [100];
+    char mem_buf [15];
     char *tx_data;
     int tx_off;
     int tx_len;
@@ -571,7 +571,7 @@ static int uart_rx_cb(void *arg, uint8_t data)
         i = 0;
     }
 
-    sprintf(uart_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
+    // sprintf(uart_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
     
     printf("%c", buf1.mem_buf[i],'\n');
     if(data == NULL)
@@ -723,7 +723,7 @@ static void uart_cb (struct dpl_event * ev)
 
 
     
-    os_time_delay(OS_TICKS_PER_SEC);
+    // os_time_delay(OS_TICKS_PER_SEC);
 
 
     hal_uart_close(UART);
