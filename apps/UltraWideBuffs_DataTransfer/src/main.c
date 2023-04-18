@@ -566,7 +566,7 @@ static int uart_rx_cb(void *arg, uint8_t data)
     // *str = strcat(&str, temp);
     buf1.mem_buf[i] = temp;
     i++;
-    if(i >= 15)
+    if(i >= 15)            //if()
     {
         i = 0;
     }
