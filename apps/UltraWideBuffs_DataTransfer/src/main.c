@@ -581,8 +581,14 @@ int main(int argc, char **argv)
     }
 #else
     /* Slot 0:ccp, 1-160 stream */
-    for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
-        tdma_assign_slot(tdma, stream_slot_cb, i, (void *)uwb_transport);
+    for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++){
+        if      ((i % 4 != 0))  // Streams every 20th slot, all other slots are for ranging
+        {
+            tdma_assign_slot(tdma, stream_slot_cb, i, (void *)uwb_transport);
+
+        }
+    }
+        // tdma_assign_slot(tdma, stream_slot_cb, i, (void *)uwb_transport);
 #endif
     char *message = TX_Data;
 
