@@ -207,33 +207,6 @@ uwb_config_updated_func()
 }
 #endif
 
-// static struct dpl_callout fuel_gauge_callout;
-// /**
-//  * @brief Fetch Fuel gauge data from battery board using I2C, 
-//  * Then add the data to the memory buufer and lastly, enqueue it
-//  * 
-//  * @param ev:   decawave porting layer event
-//  */
-// static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
-// {
-//     uint8_t fg_payload[512 - sizeof(uwb_transport_frame_header_t) - 2];
-
-//     dpl_callout_reset(&fuel_gauge_callout, OS_TICKS_PER_SEC);
-
-//     volatile uint16_t   voltage         = get_voltage_mV_BQ27441_g1(fuel_gauge_ptr);
-//     volatile int16_t    current         = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
-//     volatile uint16_t   state_of_charge = get_state_of_charge_BQ27441_g1(fuel_gauge_ptr);
-//     // volatile uint16_t   state_of_health = get_state_of_health_BQ27441_g1(fuel_gauge_ptr);
-
-//     /* Store fuel gauge data in string called "fuel_gauge_string" */
-//     // sprintf(fuel_gauge_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
-//     sprintf(fuel_gauge_string, "\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
-//     /* Print the contents to either UART serial or RTT*/
-//     // printf("{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
-//     printf("\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
-
-// }
-
 #if MYNEWT_VAL(CONCURRENT_NRNG)
 
 static void
@@ -300,8 +273,7 @@ range_slot_cb(struct dpl_event *ev)
         /* Store fuel gauge data in string called "fuel_gauge_string" */
         sprintf(fuel_gauge_string, "\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
         /* Print the contents to either UART serial or RTT*/
-        // printf("\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
-        printf(fuel_gauge_string);
+        printf(fuel_gauge_string,"%\n");
 
 
     }
@@ -595,10 +567,6 @@ int main(int argc, char **argv)
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
     dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
-
-    // // Nick's Battery stuff:            Need to play around with this
-    // dpl_callout_init(&fuel_gauge_callout, dpl_eventq_dflt_get(), fuel_gauge_data_fetch_cb, uwb_transport);
-    // dpl_callout_reset(&fuel_gauge_callout, DPL_TICKS_PER_SEC);
 
 #endif
 
