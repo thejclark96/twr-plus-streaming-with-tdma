@@ -76,7 +76,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-// #define DIAGMSG(s,u) printf(s,u)
 #ifndef DIAGMSG
 #define DIAGMSG(s, u)
 #endif
@@ -235,8 +234,10 @@ range_slot_cb(struct dpl_event *ev)
     }
 
     // The following for logic determines which data to store in the payload var, (range, fuel guage, or UART), payload is what gets transmitted to gateway
-    if ((payload_increment == 0) || (payload_increment == 2))
+    // if ((payload_increment == 0) || (payload_increment == 2))
+    if ((payload_increment == 0))
     { // Range with anchors
+        printf("\n\n\nfetching range data...\n");
         /* Checks if this tag is in the correct TAG slot*/
         if (idx % MYNEWT_VAL(NRNG_NTAGS) != udev->slot_id)
         {
@@ -267,6 +268,7 @@ range_slot_cb(struct dpl_event *ev)
     }
     else if (payload_increment == 1) // Fetch fuel guage data
     {
+        printf("\n\n\nfetching fuel gauge data...\n");
         volatile uint16_t voltage = get_voltage_mV_BQ27441_g1(fuel_gauge_ptr);
         volatile int16_t current = get_average_current_mA_BQ27441_g1(fuel_gauge_ptr);
         volatile uint16_t state_of_charge = get_state_of_charge_BQ27441_g1(fuel_gauge_ptr);
@@ -276,6 +278,12 @@ range_slot_cb(struct dpl_event *ev)
         sprintf(fuel_gauge_string, "\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
         /* Print the contents to either UART serial or RTT*/
         printf(fuel_gauge_string,"%\n");
+
+
+    }
+    else if (payload_increment == 2) // Fetch UART data
+    {
+        printf("\n\n\nfetching UART data...\n");
 
 
     }
@@ -399,7 +407,8 @@ static void
 stream_timer(struct dpl_event *ev)
 {
     // The following for logic determines which data to store in the payload var, (range, fuel guage, or UART), payload is what gets transmitted to gateway
-    if      ((payload_increment == 0) || (payload_increment == 2))
+    // if      ((payload_increment == 0) || (payload_increment == 2))
+    if      ((payload_increment == 0) )
     {                                          // Store ranging data for streaming
         for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
             payload[j] = TX_Data[j - 1];
@@ -412,7 +421,13 @@ stream_timer(struct dpl_event *ev)
             payload[j] = fuel_gauge_string[j - 1];
         }
         payload_increment++;
-
+    }
+    else if (payload_increment == 2)
+    {                                          // Store UART data for streaming
+        for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
+            payload[j] = 0;
+        }
+        payload_increment++;
     }
     else
     { // Reset count
@@ -454,234 +469,12 @@ stream_timer(struct dpl_event *ev)
 }
 #endif
 
-// =====================================================================================================
-// UART Stuff
-// =====================================================================================================
-#define DATABITS 8 
-#define STOPBITS 1
-#define BAUDRATE 115200
-#define UART 0
-
-static struct dpl_callout uart_callout;
-
-static int uart_rx_cb(void *arg, uint8_t data);
-static int uart_tx(void *arg);
-static void uart_rx_func(char byte);
-
-char * uart_string ;
-
-static struct uart_buffer
-{
-    char byte;
-    char mem_buf [15];
-    char *tx_data;
-    int tx_off;
-    int tx_len;
-}uart_buffer;
-
-int i = 0;
-struct uart_buffer buf1;
-
-/* Event callback to process a line of input from console. */
-static int uart_rx_cb(void *arg, uint8_t data)
-{
-
-    char temp = (char) data;
-    // *str = strcat(&str, temp);
-    buf1.mem_buf[i] = temp;
-    i++;
-    if(i >= 15)            //if()
-    {
-        i = 0;
-    }
-
-    // sprintf(uart_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
-    
-    printf("%c", buf1.mem_buf[i],'\n');
-    if(data == NULL)
-    {
-        return -1;
-    }
-}
-
-void tx_func(char *tx_data, int data_len)
-{
-        buf1.tx_data = tx_data;
-        buf1.tx_len = data_len;
-        buf1.tx_off = 0;
-
-        hal_uart_start_tx(UART);
-
-}
-
-static int uart_tx_cb(void *arg)
-{
-
-    int rc;
-    if(buf1.tx_off >= buf1.tx_len)
-    {
-        buf1.tx_data = NULL;
-        return -1;
-    }
-    rc = buf1.tx_data[buf1.tx_off];
-    buf1.tx_off++;
-    return rc;
-
-}
-
-
-static void uart_cb (struct dpl_event * ev)
-{
-    int var = hal_uart_config(UART, 
-                    BAUDRATE, 
-                    DATABITS, 
-                    STOPBITS, 
-                    HAL_UART_PARITY_NONE,
-                    HAL_UART_FLOW_CTL_NONE);
-
-
-    assert(!var);
-
-    uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
-    struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
-
-    // hal_uart_start_rx(UART);
-
-    // char *str1 = "app.ver\r";
-    // int len1 = strlen(str1);
-
-    char *str1 = "0x9\r\n";
-    int len1 = strlen(str1);
-
-    char *str2 = "100\r\n";
-    int len2 = strlen(str2);
-
-    // char *str3 = "us.strm.vpwr.start\r\n";
-    // int len3 = strlen(str3);
-
-    char *str3 = "us.strm.start\r\n";
-    int len3 = strlen(str3);
-
-    // char *str3 = "us.reg.start\r\n";
-    // int len3 = strlen(str3);
-
-    char *str4 = "2\r\n";
-    int len4 = strlen(str4);
-
-    char *str5 = "0\r\n";
-    int len5 = strlen(str5);
-
-    char *str6 = "us.strm.stop\r\n";
-    int len6 = strlen(str6);
-
-    char *str7 = "err\r\n";
-    int len7 = strlen(str7);
-
-    char *str8 = "bp.fg.rsoc.last\r\n";
-    int len8 = strlen(str8);
-
-    char *str9 = "gn.usecnt\r\n";
-    int len9 = strlen(str9);
-
-    char *str11 = "us.strm.state.mask.set\r\n";
-    int len11 = strlen(str11);
-
-    char *str12 = "us.strm.delay.set\r\n";
-    int len12 = strlen(str12);
-
-    char *str14 = "us.act.set\r\n";
-    int len14 = strlen(str14);
-
-
-    // os_time_delay(OS_TICKS_PER_SEC);
-
-    // tx_func(str1, len1);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str11, len11);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str2, len2);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str12, len12);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-   
-    tx_func(str3, len3);
-    //os_time_delay(2*OS_TICKS_PER_SEC);
-
-    hal_uart_start_rx(UART);
-    // os_time_delay(5*OS_TICKS_PER_SEC);
-
-    // tx_func(str4, len4);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str14, len14);
-    // os_time_delay(4*OS_TICKS_PER_SEC);
-
-    // tx_func(str5, len5);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str14, len14);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-
-    // tx_func(str6, len6);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // hal_uart_start_rx(UART);
-    // os_time_delay(OS_TICKS_PER_SEC);
-
-    //printf("%s","error",'\n');
-
-
-    // tx_func(str8, len8);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str9, len9);
-    // os_time_delay(2*OS_TICKS_PER_SEC);
-
-    // tx_func(str7, len7);
-    // os_time_delay(4*OS_TICKS_PER_SEC);
-
-
-
-    
-    // os_time_delay(OS_TICKS_PER_SEC);
-
-
-    hal_uart_close(UART);
-}
-
-
-// =====================================================================================================
-
 int main(int argc, char **argv)
 {
     int rc;
     sysinit();
     uint8_t buf[2];
     initialize_i2c();
-
-    int var;
-    struct uart_buffer *buf1;
-
-    struct nrf52_uart_cfg cfg = {
-            .suc_pin_tx = 27,                          /* pins for IO */
-            .suc_pin_rx = 26
-    };
-
-    assert (hal_uart_init(UART, &cfg) == 0);
-    var = hal_uart_init_cbs(0, 
-                        uart_tx_cb,
-                        NULL,
-                        uart_rx_cb,
-                        buf1);
-
-
-    assert(!var);
-
-    // ==============================================================================
 
     // initialize the memory size
     TX_Data = (char *)malloc(512 * sizeof(char));
@@ -704,7 +497,8 @@ int main(int argc, char **argv)
 #if MYNEWT_VAL(UWBCFG_ENABLED)
     /* Register callback for UWB configuration changes */
     struct uwbcfg_cbs uwb_cb = {
-        .uc_update = uwb_config_updated_func};
+        .uc_update = uwb_config_updated_func
+    };
     uwbcfg_register(&uwb_cb);
     /* Load config from flash */
     conf_load();
@@ -767,12 +561,12 @@ int main(int argc, char **argv)
     /* Slot 0:ccp, Slot 1+2:PAN , the rest of the slots we play around with */
     for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
     {
-        if      ((i % 2 != 0))  // Streams every 20th slot, all other slots are for ranging
+        if      ((i % 10 != 0))  // Streams every 20th slot, all other slots are for ranging
         {
             tdma_assign_slot(tdma, stream_slot_cb, i, (void *)uwb_transport);
 
         }
-        else{
+        else if ((i % 20 != 0)){
             tdma_assign_slot(tdma, range_slot_cb, i, (void *)nrng);
         }
     }
