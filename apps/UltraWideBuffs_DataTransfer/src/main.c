@@ -414,7 +414,7 @@ static void fuel_gauge_data_fetch_cb (struct dpl_event * ev)
     // volatile uint16_t state_of_health = get_state_of_health_BQ27441_g1(fuel_gauge_ptr);
 
     sprintf(fuel_gauge_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
-    printf("{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
+    printf("\n {message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
 
 
    
@@ -549,7 +549,7 @@ char * uart_string ;
 static struct uart_buffer
 {
     char byte;
-    char mem_buf [15];
+    char mem_buf [98];
     char *tx_data;
     int tx_off;
     int tx_len;
@@ -557,27 +557,34 @@ static struct uart_buffer
 
 int i = 0;
 struct uart_buffer buf1;
+int comparison_value;
 
 /* Event callback to process a line of input from console. */
 static int uart_rx_cb(void *arg, uint8_t data)
 {
-
+    // comparison_value = data;
     char temp = (char) data;
-    // *str = strcat(&str, temp);
+    // if(temp == comparison_value)
+    // {
+    //     i = 0;
+    // }
+
     buf1.mem_buf[i] = temp;
     i++;
-    if(i >= 15)            //if()
+    if(i >= 98)            
     {
         i = 0;
     }
 
-    // sprintf(uart_string, "{message} // UID: %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %%\n", my_uid, voltage, current, state_of_charge);
-    
-    printf("%c", buf1.mem_buf[i],'\n');
-    if(data == NULL)
-    {
-        return -1;
-    }
+    // if(data = 10)
+    // {
+    printf("%c", buf1.mem_buf[i], '\n');
+    // }
+
+    // if(data == NULL)
+    // {
+    //     return -1;
+    // }
 }
 
 void tx_func(char *tx_data, int data_len)
@@ -608,15 +615,7 @@ static int uart_tx_cb(void *arg)
 
 static void uart_cb (struct dpl_event * ev)
 {
-    int var = hal_uart_config(UART, 
-                    BAUDRATE, 
-                    DATABITS, 
-                    STOPBITS, 
-                    HAL_UART_PARITY_NONE,
-                    HAL_UART_FLOW_CTL_NONE);
 
-
-    assert(!var);
 
     uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
     struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
@@ -723,10 +722,10 @@ static void uart_cb (struct dpl_event * ev)
 
 
     
-    // os_time_delay(OS_TICKS_PER_SEC);
+    os_time_delay(2*OS_TICKS_PER_SEC);
 
 
-    hal_uart_close(UART);
+    // hal_uart_close(UART);
 }
 
 
@@ -760,6 +759,16 @@ int main(int argc, char **argv){
                         NULL,
                         uart_rx_cb,
                         buf1);
+
+
+    assert(!var);
+
+    var = hal_uart_config(UART, 
+                BAUDRATE, 
+                DATABITS, 
+                STOPBITS, 
+                HAL_UART_PARITY_NONE,
+                HAL_UART_FLOW_CTL_NONE);
 
 
     assert(!var);
