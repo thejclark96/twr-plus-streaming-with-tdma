@@ -80,7 +80,7 @@ cd -
 4. To erase the default flash image that shipped with the DWM1001.
 
 ```no-highlight
-$ JLinkExe -device nRF52 -speed 4000 -if SWD
+JLinkExe -device nRF52 -speed 4000 -if SWD
 J-Link>erase
 J-Link>exit
 $
@@ -89,7 +89,7 @@ $
 or if you have nrfjprog ([Nordic Cmd Tools](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download)) installed:
 
 ```
-    $ nrfjprog -f NRF52 -e
+nrfjprog -f NRF52 -e
 ```
 
 
