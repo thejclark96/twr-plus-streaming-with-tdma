@@ -1,0 +1,215 @@
+SC>@commands
+L0 GENERAL COMMANDS
+*******************
+inquiry                                                                                   Gets software type string
+boot.ver                                                                                  Gets bootloader software version number
+app.ver                                                                                   Gets operational software version number
+app.bld.cfg                                                                               Determines whether operational software build configuration is for Release (1) or Debug (0)
+gn.app.bld                                                                                Gets information about operational software build version
+gn.app.feat                                                                               Gets information about operational software features
+pcba                                                                                      Gets built-in PC board assembly (PCBA) serial number
+ser                                                                                       Gets device serial number
+bod                                                                                       Gets device born-on date
+err                                                                                       Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+evtlog.last                                                                               Gets most recent event log code stored in flash (hex words, one per line, undecoded)
+evtlog                                                                                    Gets entire stored flash event log content (hex words, one per line, undecoded)
+secu.mode                                                                                 Gets secure operating mode level in effect (0 => non-secure)
+gn.usecnt                                                                                 Gets generator use count
+gn.usecnt.lim                                                                             Gets generator use count limit
+gn.led                                                <L>                                 Gets illumination intensity (0..255) for generator LED <L>: 1=>red, 2=>green, 3=>blue
+gn.cpu.ovrtemp                                                                            Gets CPU overtemp threshold
+gn.cpu.temp                                                                               Gets CPU temperature (float)
+gn.state                                                                                  Gets current operating state of generator: 0=>idle, 1=>activating, 2=>recoverable err, 3=>unrecoverable err, 4=>test, 5=>reprocessed disposable
+gn.watchdog                                                                               Gets watchdog high water mark (maximum time between watchdog pets)
+                                                                                          
+                                                                                          
+L1 GENERATOR COMMANDS
+*********************
+pcba.set                                              <B1>..<B22>                         Sets built-in PC board assembly (PCBA) serial number to characters <B1>... (can use $string notation; if already set, will error)
+ser.set                                               <B1>..<B12>                         Sets device serial number to characters <B1>... (can use $string notation; if already set, will error)
+bod.set                                               <B1>..<B10>                         Sets device born-on date (exactly 10 text digits, can use $string notation; if already set, will error)
+restart                                                                                   Restarts operational software
+secu.mode.exit                                                                            Exits secure operating mode
+gn.peek                                               <A>                                 Reads 16-bit word from generator RAM/flash address <A>
+gn.peek.l                                             <A>                                 Reads 32-bit doubleword from generator RAM/flash address <A> (odd address => next lower even address read)
+gn.poke                                               <A> <V>                             Writes 16-bit word <V> to generator RAM address <A>
+gn.flash.poke                                         <A> <V>                             Writes 16-bit word <V> to generator flash address <A>
+gn.cal.eras                                                                               Erases calibration/usage/serial number generator flash sector
+gn.evtlog.eras                                                                            Erases generator operational event log sector in flash
+gn.evtlog.fill                                                                            Fills generator operational event log sector in flash with dummy content
+gn.evtlog.used                                                                            Gets proportion of generator operational event log sector used in flash
+gn.usecnt.lim.set                                     <L>                                 Sets generator use count limit to <L>
+gn.usecnt.clr                                                                             Sets generator use count to zero and gets calibration data (original and restored); use count shows zero after application software restart
+gn.usecnt.set                                         <U>                                 Sets generator use count to <U>
+gn.led.set                                            <L> <I>                             Sets illumination intensity <I> (0..255) for generator LED <L>: 1=>red, 2=>green, 3=>blue
+gn.led.color.set                                      <C>                                 Sets generator LEDs to aggregate color <C>: 0=>black, 1=>red, 2=>green, 3=>blue, 4=>yellow, 5=>purple, 6=>orange, 7=>white
+gn.cpu.ovrtemp.set                                    <T>                                 Sets CPU overtemp threshold <T>
+                                                                                          
+                                                                                          
+L0 BATTERY/DISPOSABLE COMMANDS
+******************************
+bp.adc                                                                                    Reads all ADC channels (float)
+bp.fg.rsoc.last                                                                           Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+bp.fg.volt.last                                                                           Gets last voltage acquired from battery pack fuel gauge (mV)
+bp.fg.temp.last                                                                           Gets last temperature readings acquired from battery pack fuel gauge (raw int values, decikelvins)
+bp.cvtr.temp.last                                                                         Gets last temperature reading acquired from battery pack converter
+bp.rtc.date                                                                               Gets present date from battery pack real-time clock (RTC): MM/DD/YYYY
+bp.rtc.time                                                                               Gets present time from battery pack real-time clock (RTC)
+bp.i2.errs                                                                                Retrieves I2C error counts since startup (ADC, DAC, FuelGauge)
+bp.log                                                                                    Gets entire battery pack event log content (hex words, one per line, undecoded)
+                                                                                          
+                                                                                          
+L1 BATTERY/DISPOSABLE COMMANDS
+******************************
+bp.dac.poke                                           <V> [<C>]                           Asserts voltage <V> (0 to 2.0 V) on battery pack DAC channel <C>: 0=>feedback (A), 1=>control (B) (default: B)
+bp.eep.id.locked                                                                          Determines whether battery pack EEPROM ID page is locked (1) or unlocked (0)
+bp.eep.id.rd                                          <A> [<C>]                           Reads 16-bit word from battery pack EEPROM ID page address <A> (16-bit aligned, 0..0xFE); <C> is cryption flag: 0=>decrypt word (default) if applicable, 1=>no decryption
+bp.eep.id.wr                                          <A> <W> [<C>]                       Writes 16-bit word <W> to battery pack EEPROM ID page address <A> (16-bit aligned, 0..0xFE); <C> is cryption flag: 0=>encrypt word (default) if applicable, 1=>no encryption
+bp.eep.rd                                             <A> <N>                             Reads <N> (1-32) bytes from battery pack EEPROM starting at address <A> (16-bit aligned, 18-bit address range)
+bp.eep.wr                                             <A> <B1>..<B32>                     Writes N (2-32) bytes <B1>... to battery pack EEPROM starting at address <A> (16-bit aligned, 18-bit address range); N must be even
+bp.eep.page.eras                                      <A>                                 Erases eeprom page that contains address <A>. Limited to battery log pages
+bp.fg.flash.rd                                        <A> <N>                             Reads <N> (1-32) bytes from battery pack fuel gauge flash starting at address <A> (18-bit address range)
+bp.fg.cmd.rd                                          <C>                                 Issues battery pack fuel gauge command <C> for read access
+bp.fg.ser                                                                                 Gets battery pack fuel gauge serial number
+bp.rtc.date.set                                       <M> <D> <Y>                         Sets present date (<M>/<D>/<Y>) on battery pack real-time clock (RTC) (numeric parameters)
+bp.rtc.time.set                                       <H> [<M>] [<S>]                     Sets present time (<H>:<M>:<S>) on battery pack real-time clock (RTC) (numeric parameters; minutes/seconds default to 0)
+bp.temp.fault.set                                     <T>                                 Sets battery pack converter temperature fault threshold <T> (float, deg C)
+bp.log.eras                                                                               Erases entire battery pack event log content
+bp.log.fill                                                                               Fills entire battery pack event log content with dummy content
+                                                                                          
+                                                                                          
+L0 DISPOSABLE FLEX COMMANDS
+***************************
+df.ser                                                                                    Gets the serial number in the disposable's Flex EEPROM
+df.used                                                                                   Determines whether disposable flex has been used (1) or is unused (0)
+df.wrprot                                                                                 Gets permanent write-protect status of disposable flex: 1=>protected, 0=>unprotected
+                                                                                          
+                                                                                          
+L1 DISPOSABLE FLEX COMMANDS
+***************************
+df.eep.rd                                             <A>                                 Reads 16-bit word from disposable flex EEPROM address <A> (16-bit aligned, 0..0xFE)
+df.eep.wr                                             <A> <W>                             Writes 16-bit word <W> to disposable flex EEPROM address <A> (16-bit aligned, 0..0xFE)
+df.ser.clr                                            <S>                                 Clears the serial number <S> (0=>main, 1=>reprocessing) of disposable flex
+df.ser.main.set                                       <B1>..<B12>                         Sets main serial number of disposable flex to characters <B1>... (can use $string notation)
+df.ser.reproc.set                                     <B1>..<B12>                         Sets reprocessing serial number of disposable flex to characters <B1>... (can use $string notation)
+df.used.set                                                                               Sets disposable flex state as used by generator
+                                                                                          
+                                                                                          
+L0 ULTRASONIC COMMANDS
+**********************
+us.act                                                                                    Determines whether generator ultrasonic activation is occurring and power level: 0=>off, 1=>on min power, 2=>on max power
+us.act.count                                                                              Determines the number of generator ultrasonic activations since its operation firmware was restarted
+us.act.timeout                                                                            Determines whether generator ultrasonic activation timeout is enabled (1) or disabled (0)
+us.fault                                                                                  Determines whether generator ultrasonic fault detection is enabled (1) or disabled (0)
+us.vel.slew                                                                               Gets generator ultrasonic velocity slew rate (int)
+us.vel.loop                                                                               Determines whether generator ultrasonic velocity control loop is closed (1) or open (0)
+us.vel.kp                                                                                 Gets generator ultrasonic velocity control loop Kp coefficient (float)
+us.vel.ki                                                                                 Gets generator ultrasonic velocity control loop Ki coefficient (float)
+us.vel.kd                                                                                 Gets generator ultrasonic velocity control loop Kd coefficient (float)
+us.vel.min.spt                                                                            Gets generator ultrasonic velocity control loop min velocity setpoint (int)
+us.vel.max.spt                                                                            Gets generator ultrasonic velocity control loop max velocity setpoint (int)
+us.vel.max.out                                                                            Gets generator ultrasonic velocity control loop max velocity DAC output (float, V)
+us.vel.windup                                                                             Gets generator ultrasonic velocity control loop integral windup limit (float)
+us.vel.cal                                                                                Gets generator ultrasonic velocity control loop calibration value (int)
+us.volt.cal                                                                               Gets generator ultrasonic voltage sensor calibration value (float)
+us.volt.offset.cal                                                                        Gets generator ultrasonic voltage sensor offset calibration value in effect (float, V)
+us.curr.cal                                                                               Gets generator ultrasonic current sensor calibration value (float)
+us.curr.offset.cal                                                                        Gets generator ultrasonic current sensor offset calibration value in effect (float, A)
+us.min.curr.cal                                                                           Gets min activation target current calibration value
+us.max.curr.cal                                                                           Gets max activation target current calibration value
+us.frq.loop                                                                               Determines whether generator ultrasonic frequency control loop is closed (1) or open (0)
+us.frq.base                                                                               Gets generator ultrasonic frequency control loop base (starting) frequency (int, Hz)
+us.frq.kp                                                                                 Gets generator ultrasonic frequency control loop Kp coefficient (float)
+us.frq.ki                                                                                 Gets generator ultrasonic frequency control loop Ki coefficient (float)
+us.frq.kd                                                                                 Gets generator ultrasonic frequency control loop Kd coefficient (float)
+us.gate                                                                                   Determines whether generator ultrasonic PWM gate is enabled (1) or disabled (0)
+us.phase                                                                                  Gets generator ultrasonic phase offset (float, deg)
+us.rampdown                                                                               Gets generator ultrasonic deactivation rampdown time (int, ms)
+us.per                                                                                    Gets generator ultrasonic PWM period setting (int, counts)
+us.load                                                                                   Determines whether generator ultrasonic load is enabled (1) or disabled (0)
+us.load.per                                                                               Gets generator ultrasonic load PWM period setting (int, counts)
+us.dds.frq                                                                                Gets Direct Digital Synthesizer (DDS) frequency (int, milliHz)
+us.dds.clk.frq                                                                            Gets Direct Digital Synthesizer (DDS) clock source frequency (float, MHz)
+us.dds.clk.src                                                                            Determines clock source used by Direct Digital Synthesizer (DDS) clock: 0=>internal OSC1, 1=>internal OSC2, 2=>crystal, 3=>external
+                                                                                          
+                                                                                          
+L1 ULTRASONIC COMMANDS
+**********************
+us.act.set                                            <S>                                 Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
+us.act.timeout.set                                    <S>                                 Enables (1) or disables (0) <S> generator ultrasonic activation timeouts
+us.fault.set                                          <S>                                 Enables (1) or disables (0) <S> generator ultrasonic fault monitoring <S>
+us.vel.slew.set                                       <C>                                 Sets generator ultrasonic velocity slew rate <C> (int)
+us.vel.loop.set                                       <S>                                 Closes (1) or opens (0) <S> generator ultrasonic velocity control loop
+us.vel.kp.set                                         <Kp>                                Sets generator ultrasonic velocity control loop <Kp> coefficient (float)
+us.vel.ki.set                                         <Ki>                                Sets generator ultrasonic velocity control loop <Ki> coefficient (float)
+us.vel.kd.set                                         <Kd>                                Sets generator ultrasonic velocity control loop <Kd> coefficient (float)
+us.vel.min.spt.set                                    <S>                                 Sets generator ultrasonic velocity control loop min velocity setpoint <S> (int)
+us.vel.max.spt.set                                    <S>                                 Sets generator ultrasonic velocity control loop max velocity setpoint <S> (int)
+us.vel.max.out.set                                    <V>                                 Sets generator ultrasonic velocity control loop max velocity DAC output <V> (float, V)
+us.vel.windup.set                                     <W>                                 Sets generator ultrasonic velocity control loop integral windup limit <W> (float)
+us.vel.cal.set                                        <V>                                 Sets generator ultrasonic velocity control loop calibration value <V> (int)
+us.volt.cal.set                                       <V>                                 Sets generator ultrasonic voltage sensor gain calibration value <V> (float)
+us.volt.offset.cal.set                                <V>                                 Sets generator ultrasonic voltage sensor offset calibration value <V> (float, V)
+us.curr.cal.set                                       <C>                                 Sets generator ultrasonic current sensor gain calibration value <C> (float)
+us.curr.offset.cal.set                                <C>                                 Sets generator ultrasonic current sensor offset calibration value <C> (float, A)
+us.min.curr.cal.set                                   <A>                                 Sets the min activation target current calibration value to <A>
+us.max.curr.cal.set                                   <A>                                 Sets the max activation target current calibration value to <A>
+us.frq.loop.set                                       <S>                                 Closes (1) or opens (0) <S> generator ultrasonic frequency control loop
+us.frq.base.set                                       <F>                                 Sets generator ultrasonic base (starting) frequency <F> (int, Hz)
+us.frq.kp.set                                         <Kp>                                Sets generator ultrasonic frequency control loop <Kp> coefficient (float)
+us.frq.ki.set                                         <Ki>                                Sets generator ultrasonic frequency control loop <Ki> coefficient (float)
+us.frq.kd.set                                         <Kd>                                Sets generator ultrasonic frequency control loop <Kd> coefficient (float)
+us.frq.sweep                                          <S> <E> <I> <C> <H> <D>             Performs frequency sweep with parameters: starting <S>/ending <E> frequency and increment <I> (int, milliHz), # frequency cycles <C>, hold time <H> (int, ms), DAC output value (float, V)
+us.gate.set                                           <S>                                 Enables (1) or disables (0) <S> generator ultrasonic PWM gate
+us.load.duty.set                                      <D>                                 Sets generator ultrasonic load PWM duty cycle <D> (0.0 .. 1.0)
+us.load.per.set                                       <P>                                 Sets generator ultrasonic load PWM period <P> (int, counts)
+us.load.set                                           <S>                                 Enables (1) or disables (0) <S> generator ultrasonic load
+us.switching.set                                      <S>                                 Enables (1) or disables (0) <S> generator ultrasonic switching
+us.per.set                                            <P>                                 Sets generator ultrasonic PWM period <P> (int, counts)
+us.phase.set                                          <P>                                 Sets generator ultrasonic phase offset <P> (float, deg)
+us.rampdown.set                                       <T>                                 Sets generator ultrasonic deactivation rampdown time <T> (ms)
+us.strm.delay.set                                     <T>                                 Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+us.strm.state.mask                                                                        Gets the mask of all generator operating states for which streaming is suppressed, for all streaming commands
+us.strm.state.mask.set                                <M>                                 Sets the mask <M> of all generator operating states for which streaming is to be suppressed, for all streaming commands (see "gn.state")
+us.strm.start                                                                             Starts periodic streaming output
+us.strm.stop                                                                              Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
+us.strm.vpwr.start                                                                        Starts Vpower streaming output (use "us.strm.stop" to stop streaming)
+us.strm.manuf.start                                                                       Starts manufacturing data streaming output (use "us.strm.stop" to stop streaming)
+us.strm.smach.start                                                                       Starts state machine transition streaming output (use "us.strm.stop" to stop streaming)
+us.reg.start                                          <P>                                 Starts ultrasonic power streaming and regulation at power <P> (float, W) (use "us.reg.stop" to stop regulation, "us.strm.stop" to stop streaming)
+us.reg.stop                                                                               Stops all power regulation (streaming remains active: use "us.strm.stop" to stop streaming)
+us.spidac.vel.inj                                                                         Determines whether velocity control loop injection via SPI DAC is enabled (1) or disabled (0)
+us.spidac.vel.inj.set                                 <S>                                 Enables (1) or disables (0) <S> velocity control loop injection via SPI DAC
+us.spidac.frq.inj                                                                         Determines whether frequency control loop injection via SPI DAC is enabled (1) or disabled (0)
+us.spidac.frq.inj.set                                 <S>                                 Enables (1) or disables (0) <S> frequency control loop injection via SPI DAC
+us.spidac.gain                                        <C>                                 Gets the gain multiplier of SPI DAC channel <C>
+us.spidac.gain.set                                    <G>                                 Sets gain multiplier <G> (int) for control loop(s) via SPI DAC
+us.spidac                                                                                 Determines whether SPI DAC state machine is enabled (1) or disabled (0)
+us.spidac.set                                         <S>                                 Enables (1) or disables (0) <S> SPI DAC state machine
+us.spidac.mode                                                                            Displays the current spidac mode
+us.spidac.mode.set                                    <M>                                 Sets the spidac mode <M>
+us.dds.frq.set                                        <F>                                 Sets Direct Digital Synthesizer (DDS) frequency <F> (int, milliHz)
+us.dds.clk.src.set                                    <S>                                 Selects clock source <S> for Direct Digital Synthesizer (DDS) clock: 0=>internal OSC1, 1=>internal OSC2, 2=>crystal, 3=>external
+                                                                                          
+                                                                                          
+L1 I2C COMMANDS
+***************
+i2.bus.rst                                                                                Performs hard I2C bus reset
+i2.spd.set                                            <S>                                 Sets I2C bus speed <S> to 100kHz (1) or 400KHz (0)
+i2.rd                                                 <A> <N>                             Reads <N> bytes from I2C bus slave address <A> (7-bit address)
+i2.wr                                                 <A> <B1>..<B36>                     Writes N (1-36) bytes <B1>..<B36> to I2C slave address <A> (7-bit address)
+i2.wr.ns                                              <A> <B1>..<B36>                     Writes N (1-36) bytes <B1>..<B36> to I2C slave address <A> (7-bit address), with no I2C Stop condition
+                                                                                          
+                                                                                          
+L1 TEST COMMANDS
+****************
+test.mode                                                                                 Determines whether operational software is in test mode (1) or normal operational mode (0)
+test.mode.set                                         <M>                                 Enables (1) or disables (0) operational software test mode according to <M>
+gn.err.trig                                           <C>                                 Triggers a fault of a specific error category (see Errors.h ErrorCategId for categories)
+gn.stkmon.init                                                                            Initializes stack monitor (fails if the stack address to monitor is out of range or debugger is in control of the watchpoint event ID register)
+gn.stkmon.chk                                                                             Checks max stack usage by operational software and gets the highest address/percent used
+gn.stkmon.ovrflo                                                                          Triggers stack overflow and verifies proper detection by operational software
+gn.aud.play                                           <A>                                 Plays audio sequence <A>: 0=>none, 1=>boot, 2=>activation min, 3=>activation max, 4=>end-of-life, 5=>battery depleted, 6=>error, 7=>battery low (first), 8=>battery low, 9=>reprocessed flex
+gn.aud.set                                            <S>                                 Enables (1) or disables (0) <S> all audio playback
+gn.aud.quiet                                                                              Squelches playback of audio tone sequences that are repeated periodically
+gn.aud.poke                                           <F> <D>                             Plays single audio tone <F> (Hz) for duration <D> (ms)

@@ -113,6 +113,200 @@ uint8_t reciever[512 - sizeof(uwb_transport_frame_header_t) - 2];
  */
 uint32_t my_uid;
 
+
+
+// =====================================================================================================
+// UART Stuff
+// =====================================================================================================
+#define DATABITS 8 
+#define STOPBITS 1
+#define BAUDRATE 115200
+#define UART 0
+
+static struct dpl_callout uart_callout;
+static int uart_rx_cb(void *arg, uint8_t data);
+static int uart_tx(void *arg);
+static void uart_rx_func(char byte);
+
+char * uart_string ;
+
+static struct uart_buffer
+{
+    char byte;
+    char mem_buf [256];
+    char *tx_data;
+    int tx_off;
+    int tx_len;
+}uart_buffer;
+
+int i = 0;
+struct uart_buffer buf1;
+int comparison_value;
+
+
+/**
+ * @brief:      Event callback to process a line of input from console.
+ * 
+ * @param arg 
+ * @param data 
+ * @return int 
+ */
+static int uart_rx_cb(void *arg, uint8_t data)
+{
+    char temp = (char) data;
+
+
+    buf1.mem_buf[i] = temp;
+    i++;
+    if(i >= sizeof(buf1.mem_buf))            
+    {
+        for (uint16_t j = 1; j < sizeof(buf1.mem_buf) - 1; j++){
+            payload[j] = buf1.mem_buf[j - 1];
+        }
+        i = 0;
+        // hal_uart_close(UART);
+    }
+
+
+    printf("%c", buf1.mem_buf[i], '\n');
+    // printf(buf1.mem_buf[i], '\n');
+
+}
+/**
+ * @brief Sends commands to the sonicision
+ * 
+ * @param tx_data:  Command to send to Soni
+ * @param data_len: Command length
+ */
+void tx_func(char *tx_data, int data_len)
+{
+        buf1.tx_data = tx_data;
+        buf1.tx_len = data_len;
+        buf1.tx_off = 0;
+
+        hal_uart_start_tx(UART);
+
+}
+/**
+ * @brief wtf is this
+ * 
+ * @param arg 
+ * @return int 
+ */
+static int uart_tx_cb(void *arg)
+{
+
+    int rc;
+    if(buf1.tx_off >= buf1.tx_len)
+    {
+        buf1.tx_data = NULL;
+        return -1;
+    }
+    rc = buf1.tx_data[buf1.tx_off];
+    buf1.tx_off++;
+    return rc;
+
+}
+/**
+ * @brief 
+ * 
+ * @param ev 
+ */
+static void uart_cb (struct dpl_event * ev)
+{
+
+
+    uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
+    struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
+
+    // hal_uart_start_rx(UART);
+
+    // char *str1 = "app.ver\r"; // Gets operational software version number
+    // int len1 = strlen(str1);
+
+    char *str1 = "0x9\r\n";
+    int len1 = strlen(str1);
+
+    char *str2 = "100\r\n";
+    int len2 = strlen(str2);
+
+    // char *str3 = "us.strm.vpwr.start\r\n"; // Starts Vpower streaming output (use "us.strm.stop" to stop streaming)
+    // int len3 = strlen(str3);
+
+    char *str3 = "us.strm.start\r\n"; //  Starts periodic streaming output
+    int len3 = strlen(str3);
+
+    // char *str3 = "us.reg.start\r\n"; // Starts ultrasonic power streaming and regulation at power <P> (float, W) (use "us.reg.stop" to stop regulation, "us.strm.stop" to stop streaming)
+    // int len3 = strlen(str3);
+
+    char *str4 = "2\r\n";
+    int len4 = strlen(str4);
+
+    char *str5 = "0\r\n";
+    int len5 = strlen(str5);
+
+    char *str6 = "us.strm.stop\r\n"; // Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
+    int len6 = strlen(str6);
+
+    char *str7 = "err\r\n"; // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+    int len7 = strlen(str7);
+
+    char *str8 = "bp.fg.rsoc.last\r\n"; // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+    int len8 = strlen(str8);
+
+    char *str9 = "gn.usecnt\r\n"; // Gets generator use count
+    int len9 = strlen(str9);
+
+    char *str11 = "us.strm.state.mask.set\r\n"; // Sets the mask <M> of all generator operating states for which streaming is to be suppressed, for all streaming commands (see "gn.state")
+    int len11 = strlen(str11);
+
+    char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+    int len12 = strlen(str12);
+
+    char *str14 = "us.act.set\r\n"; // Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
+    int len14 = strlen(str14);
+
+/*Desired sequence of commands according to UART testing with STM*/
+    // tx_func(str1, len1);         // 0x9
+
+    // tx_func(str11, len11);       // Sets the mask <M> of all generator operating states for which streaming is to be suppressed, for all streaming commands (see "gn.state")
+
+    // tx_func(str2, len2);         // 100
+
+    // tx_func(str12, len12);       // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+   
+    tx_func(str3, len3);            // Starts periodic streaming output
+
+    hal_uart_start_rx(UART);
+
+    // tx_func(str4, len4);         // 2
+
+    // tx_func(str14, len14);       // Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
+
+    // tx_func(str5, len5);         // 0
+
+    // tx_func(str14, len14);       // Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
+
+
+    // tx_func(str6, len6);         // Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
+
+    // hal_uart_start_rx(UART);
+
+    //printf("%s","error",'\n');
+
+
+    // tx_func(str8, len8);         // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+
+    // tx_func(str9, len9);         // Gets generator use count
+
+    // tx_func(str7, len7);         // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+
+
+    // hal_uart_close(UART);
+}
+// =====================================================================================================
+
+
 /**
  * @brief Write to device over the I2C bus
  *
@@ -285,6 +479,14 @@ range_slot_cb(struct dpl_event *ev)
     {
         printf("\n\n\nfetching UART data...\n");
 
+        char *str3 = "us.strm.start\r\n";
+        int len3 = strlen(str3);
+
+        hal_uart_start_rx(UART);
+        // os_time_delay(5*OS_TICKS_PER_SEC);
+        tx_func(str3, len3);
+        //os_time_delay(2*OS_TICKS_PER_SEC);
+        // hal_uart_close(UART);
 
     }
     else
@@ -427,9 +629,9 @@ stream_timer(struct dpl_event *ev)
     else if (payload_increment == 2)
     {                                          // Store UART data for streaming
         // payload_increment++;
-        for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
-            payload[j] = 0;
-        }
+        // for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
+        //     payload[j] = buf1.mem_buf[j - 1];
+        // }
         payload_increment = 0;
     }
     else
@@ -485,6 +687,33 @@ int main(int argc, char **argv)
     fuel_gauge_string = (char *)malloc(512 * sizeof(char));
 
     struct uwb_dev *udev = uwb_dev_idx_lookup(0);
+// =====================================================================================================
+// UART Stuff
+// =====================================================================================================
+    int var;
+    struct uart_buffer *buf1;
+
+    struct nrf52_uart_cfg cfg = {
+        .suc_pin_tx = 27, /* pins for IO */
+        .suc_pin_rx = 26};
+
+    assert(hal_uart_init(UART, &cfg) == 0);
+
+    var = hal_uart_init_cbs(0,
+                            uart_tx_cb,
+                            NULL,
+                            uart_rx_cb,
+                            buf1);
+    assert(!var);
+
+    var = hal_uart_config(UART,
+                          BAUDRATE,
+                          DATABITS,
+                          STOPBITS,
+                          HAL_UART_PARITY_NONE,
+                          HAL_UART_FLOW_CTL_NONE);
+    assert(!var);
+// =====================================================================================================
 
 #if MYNEWT_VAL(USE_DBLBUFFER)
     /* Make sure to enable double buffring */
