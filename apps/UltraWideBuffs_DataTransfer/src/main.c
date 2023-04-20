@@ -410,24 +410,27 @@ stream_timer(struct dpl_event *ev)
     // if      ((payload_increment == 0) || (payload_increment == 2))
     if      ((payload_increment == 0) )
     {                                          // Store ranging data for streaming
+        // payload_increment++;
         for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
             payload[j] = TX_Data[j - 1];
         }
-        payload_increment++;
+        payload_increment = 1;
     }
     else if (payload_increment == 1)
     {                                          // Store battery data for streaming
+        // payload_increment++;
         for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
             payload[j] = fuel_gauge_string[j - 1];
         }
-        payload_increment++;
+        payload_increment = 2;
     }
     else if (payload_increment == 2)
     {                                          // Store UART data for streaming
+        // payload_increment++;
         for (uint16_t j = 1; j < 512 - 1; j++){// Need to add macro for 512, name it def size or something
             payload[j] = 0;
         }
-        payload_increment++;
+        payload_increment = 0;
     }
     else
     { // Reset count
@@ -561,12 +564,14 @@ int main(int argc, char **argv)
     /* Slot 0:ccp, Slot 1+2:PAN , the rest of the slots we play around with */
     for (uint16_t i = 3; i < MYNEWT_VAL(TDMA_NSLOTS) - 1; i++)
     {
-        if      ((i % 10 != 0))  // Streams every 20th slot, all other slots are for ranging
+        // if      ((i % 20 != 0))  // Streams every 20th slot, all other slots are for ranging
+        if      ((i % 2 != 0))  // Streams every 20th slot, all other slots are for ranging
         {
             tdma_assign_slot(tdma, stream_slot_cb, i, (void *)uwb_transport);
 
         }
-        else if ((i % 20 != 0)){
+        // else if ((i % 40 != 0)){
+        else if ((i % 2 == 0)){
             tdma_assign_slot(tdma, range_slot_cb, i, (void *)nrng);
         }
     }
@@ -586,7 +591,6 @@ int main(int argc, char **argv)
 #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     dpl_callout_init(&stream_callout, dpl_eventq_dflt_get(), stream_timer, uwb_transport);
     dpl_callout_reset(&stream_callout, DPL_TICKS_PER_SEC);
-
 #endif
 
     while (1)
