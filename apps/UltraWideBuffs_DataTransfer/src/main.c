@@ -133,15 +133,44 @@ char * uart_string ;
 static struct uart_buffer
 {
     char byte;
-    char mem_buf [256];
+    char mem_buf [120];
     char *tx_data;
     int tx_off;
     int tx_len;
 }uart_buffer;
 
-int i = 0;
+int c = 0;
 struct uart_buffer buf1;
 int comparison_value;
+uint8_t uart_counter = 0;
+
+char *str1 = "0x9\r\n";
+
+char *str2 = "100\r\n";
+
+char *str3 = "us.strm.start\r"; //  Starts periodic streaming output
+// char *str3 = "us.strm.start\r\n"; //  Starts periodic streaming output
+
+char *str4 = "2\r\n";
+
+char *str5 = "0\r\n";
+
+char *str6 = "us.strm.stop\r\n"; // Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
+
+char *str7 = "err\r"; // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+// char *str7 = "err\r\n"; // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+
+char *str8 = "bp.fg.rsoc.last\r"; // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+// char *str8 = "bp.fg.rsoc.last\r\n"; // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+
+char *str9 = "gn.usecnt\r"; // Gets generator use count
+// char *str9 = "gn.usecnt\r\n"; // Gets generator use count
+
+char *str11 = "us.strm.state.mask.set\r\n"; // Sets the mask <M> of all generator operating states for which streaming is to be suppressed, for all streaming commands (see "gn.state")
+
+char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+
+char *str14 = "us.act.set\r\n"; // Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
 
 
 /**
@@ -156,20 +185,27 @@ static int uart_rx_cb(void *arg, uint8_t data)
     char temp = (char) data;
 
 
-    buf1.mem_buf[i] = temp;
-    i++;
-    if(i >= sizeof(buf1.mem_buf))            
+    // printf("%c", temp, '\n');
+
+
+// Re implement after you figure out the stream shit
+    buf1.mem_buf[c] = temp;
+    printf("%c", buf1.mem_buf[c], '\n');
+    c++;
+    if(c >= sizeof(buf1.mem_buf))            
     {
         for (uint16_t j = 1; j < sizeof(buf1.mem_buf) - 1; j++){
-            payload[j] = buf1.mem_buf[j - 1];
+            if (buf1.mem_buf[j - 1] != '\n'){
+                if ((buf1.mem_buf[j - 1] >=0) && (buf1.mem_buf[j - 1] < 128)){
+                    payload[j] = buf1.mem_buf[j - 1];
+
+                }
+            }
         }
-        i = 0;
+        c = 0;
         // hal_uart_close(UART);
     }
 
-
-    printf("%c", buf1.mem_buf[i], '\n');
-    // printf(buf1.mem_buf[i], '\n');
 
 }
 /**
@@ -219,52 +255,6 @@ static void uart_cb (struct dpl_event * ev)
     uwb_transport_instance_t * uwb_transport = (uwb_transport_instance_t *)dpl_event_get_arg(ev);
     struct uwb_ccp_instance * ccp = (struct uwb_ccp_instance *)uwb_mac_find_cb_inst_ptr(uwb_transport->dev_inst, UWBEXT_CCP);
 
-    // hal_uart_start_rx(UART);
-
-    // char *str1 = "app.ver\r"; // Gets operational software version number
-    // int len1 = strlen(str1);
-
-    char *str1 = "0x9\r\n";
-    int len1 = strlen(str1);
-
-    char *str2 = "100\r\n";
-    int len2 = strlen(str2);
-
-    // char *str3 = "us.strm.vpwr.start\r\n"; // Starts Vpower streaming output (use "us.strm.stop" to stop streaming)
-    // int len3 = strlen(str3);
-
-    char *str3 = "us.strm.start\r\n"; //  Starts periodic streaming output
-    int len3 = strlen(str3);
-
-    // char *str3 = "us.reg.start\r\n"; // Starts ultrasonic power streaming and regulation at power <P> (float, W) (use "us.reg.stop" to stop regulation, "us.strm.stop" to stop streaming)
-    // int len3 = strlen(str3);
-
-    char *str4 = "2\r\n";
-    int len4 = strlen(str4);
-
-    char *str5 = "0\r\n";
-    int len5 = strlen(str5);
-
-    char *str6 = "us.strm.stop\r\n"; // Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
-    int len6 = strlen(str6);
-
-    char *str7 = "err\r\n"; // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
-    int len7 = strlen(str7);
-
-    char *str8 = "bp.fg.rsoc.last\r\n"; // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
-    int len8 = strlen(str8);
-
-    char *str9 = "gn.usecnt\r\n"; // Gets generator use count
-    int len9 = strlen(str9);
-
-    char *str11 = "us.strm.state.mask.set\r\n"; // Sets the mask <M> of all generator operating states for which streaming is to be suppressed, for all streaming commands (see "gn.state")
-    int len11 = strlen(str11);
-
-    char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
-    int len12 = strlen(str12);
-
-    char *str14 = "us.act.set\r\n"; // Starts or stops generator ultrasonic activation according to <S>: 0=>stop, 1=>start min power, 2=>start max power
-    int len14 = strlen(str14);
 
 /*Desired sequence of commands according to UART testing with STM*/
     // tx_func(str1, len1);         // 0x9
@@ -275,9 +265,9 @@ static void uart_cb (struct dpl_event * ev)
 
     // tx_func(str12, len12);       // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
    
-    tx_func(str3, len3);            // Starts periodic streaming output
+    // tx_func(str3, strlen(str3));    // Starts periodic streaming output
 
-    hal_uart_start_rx(UART);
+    // hal_uart_start_rx(UART);
 
     // tx_func(str4, len4);         // 2
 
@@ -493,6 +483,44 @@ range_slot_cb(struct dpl_event *ev)
         // tx_func(str3, len3);                    // Starts periodic streaming output
         // //os_time_delay(2*OS_TICKS_PER_SEC);
         // // hal_uart_close(UART);
+        switch (uart_counter)
+        {
+        case    0:
+            tx_func(str3, len3);            // Starts periodic streaming output
+            os_time_delay(0.2*OS_TICKS_PER_SEC);
+
+            uart_counter=1;
+
+            break;
+        case    1:
+            // tx_func(str6, strlen(str6));    // Unconditionally stops all streaming output (can also press [Ctrl+Z] key)
+            // os_time_delay(0.1*OS_TICKS_PER_SEC);
+
+            uart_counter=2;
+
+            break;            
+        case    2:
+            // tx_func(str8, strlen(str8));    // Gets last relative state of charge (RSOC) reading acquired from battery pack fuel gauge
+            // os_time_delay(0.1*OS_TICKS_PER_SEC);
+
+            uart_counter=3;
+
+            break;
+        case    3:
+            // tx_func(str9, strlen(str9));    // Gets generator use count
+            uart_counter=4;
+
+            break;
+        case    4:
+            // tx_func(str7, strlen(str7));    // Gets currently prevailing error condition (0 => none), category (see Errors.h ErrorCategId), and data (hex)
+            uart_counter=5;
+
+            break;
+        default:
+            // tx_func(str3, len3);            // Starts periodic streaming output
+            uart_counter = 1;
+            break;
+        }
 
     }
     else
@@ -501,6 +529,8 @@ range_slot_cb(struct dpl_event *ev)
     }
 }
 #endif
+
+
 
 /*!
  * @fn stream_slot_cb(struct dpl_event * ev)
@@ -724,7 +754,7 @@ int main(int argc, char **argv)
     int len3 = strlen(str3);
     char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
     int len12 = strlen(str12);
-    char *str2 = "100\r\n";
+    char *str2 = "50\r\n";
     int len2 = strlen(str2);
 
     hal_uart_start_rx(UART);
