@@ -481,12 +481,18 @@ range_slot_cb(struct dpl_event *ev)
 
         char *str3 = "us.strm.start\r\n";
         int len3 = strlen(str3);
+        // char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+        // int len12 = strlen(str12);
+        // char *str2 = "50\r\n";
+        // int len2 = strlen(str2);
 
-        hal_uart_start_rx(UART);
-        // os_time_delay(5*OS_TICKS_PER_SEC);
-        tx_func(str3, len3);
-        //os_time_delay(2*OS_TICKS_PER_SEC);
-        // hal_uart_close(UART);
+        // hal_uart_start_rx(UART);
+        // // os_time_delay(5*OS_TICKS_PER_SEC);
+        // tx_func(str2, len2);                    // 50 ms
+        // tx_func(str12, len12);                  // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+        // tx_func(str3, len3);                    // Starts periodic streaming output
+        // //os_time_delay(2*OS_TICKS_PER_SEC);
+        // // hal_uart_close(UART);
 
     }
     else
@@ -713,6 +719,19 @@ int main(int argc, char **argv)
                           HAL_UART_PARITY_NONE,
                           HAL_UART_FLOW_CTL_NONE);
     assert(!var);
+
+    char *str3 = "us.strm.start\r\n";
+    int len3 = strlen(str3);
+    char *str12 = "us.strm.delay.set\r\n"; // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+    int len12 = strlen(str12);
+    char *str2 = "100\r\n";
+    int len2 = strlen(str2);
+
+    hal_uart_start_rx(UART);
+    // os_time_delay(5*OS_TICKS_PER_SEC);
+    tx_func(str2, len2);                    // 50 ms
+    tx_func(str12, len12);                  // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
+    tx_func(str3, len3);                    // Starts periodic streaming output
 // =====================================================================================================
 
 #if MYNEWT_VAL(USE_DBLBUFFER)
