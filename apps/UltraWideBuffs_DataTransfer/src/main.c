@@ -464,7 +464,7 @@ range_slot_cb(struct dpl_event *ev)
         // volatile uint16_t   state_of_health = get_state_of_health_BQ27441_g1(fuel_gauge_ptr);
 
         /* Store fuel gauge data in string called "fuel_gauge_string" */
-        sprintf(fuel_gauge_string, "\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d %\n", my_uid, voltage, current, state_of_charge);
+        sprintf(fuel_gauge_string, "\"uid\": %d, Fuel Gauge Voltage (mV): %d, Current (mA) %d, SOC: %d,  %%\n", my_uid, voltage, current, state_of_charge);
         /* Print the contents to either UART serial or RTT*/
         printf(fuel_gauge_string,"%\n");
 
