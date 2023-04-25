@@ -70,7 +70,9 @@
 #include "mcu/nrf52_hal.h"
 #include "mcu/nrf52_periph.h"
 
+#if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
 #include "hal/hal_uart.h"
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -122,6 +124,8 @@ uint32_t my_uid;
 #define STOPBITS 1
 #define BAUDRATE 115200
 #define UART 0
+
+#if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
 
 static struct dpl_callout uart_callout;
 static int uart_rx_cb(void *arg, uint8_t data);
@@ -294,6 +298,7 @@ static void uart_cb (struct dpl_event * ev)
 
     // hal_uart_close(UART);
 }
+#endif
 // =====================================================================================================
 
 
@@ -726,6 +731,8 @@ int main(int argc, char **argv)
 // =====================================================================================================
 // UART Stuff
 // =====================================================================================================
+    
+    #if MYNEWT_VAL(UWB_TRANSPORT_ROLE) == 1
     int var;
     struct uart_buffer *buf1;
 
@@ -734,6 +741,8 @@ int main(int argc, char **argv)
         .suc_pin_rx = 26};
 
     assert(hal_uart_init(UART, &cfg) == 0);
+
+    
 
     var = hal_uart_init_cbs(0,
                             uart_tx_cb,
@@ -762,6 +771,8 @@ int main(int argc, char **argv)
     tx_func(str2, len2);                    // 50 ms
     tx_func(str12, len12);                  // Sets streaming delay <T> (int, ms) between readings, for all streaming commands (>= 50 ms)
     tx_func(str3, len3);                    // Starts periodic streaming output
+
+    #endif 
 // =====================================================================================================
 
 #if MYNEWT_VAL(USE_DBLBUFFER)
